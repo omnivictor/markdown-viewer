@@ -1,0 +1,55 @@
+@import "tailwindcss";
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+html.dark {
+  --background: #111827;
+  --foreground: #f9fafb;
+}
+
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: var(--background) !important;
+  color: var(--foreground) !important;
+  font-family: Arial, Helvetica, sans-serif;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* 강제 다크모드 적용 */
+html.dark,
+html.dark body,
+html.dark #__next,
+html.dark #root {
+  background-color: #111827 !important;
+  color: #f9fafb !important;
+}
+
+/* 라이트모드 강제 적용 */
+html.light,
+html.light body,
+html.light #__next,
+html.light #root {
+  background-color: #ffffff !important;
+  color: #171717 !important;
+}
+
+
+
+/* 기본 텍스트 선택 색상 */
+::selection {
+  background-color: #3b82f6;
+  color: white;
+}
+
+.dark ::selection {
+  background-color: #60a5fa;
+  color: #111827;
+}
