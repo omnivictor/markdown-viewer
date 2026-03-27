@@ -58,8 +58,8 @@ export default function Home() {
       <div
         className="h-screen flex flex-col transition-all duration-300 relative"
         style={{
-          backgroundColor: isDarkMode ? '#111827' : '#ffffff',
-          color: isDarkMode ? '#f9fafb' : '#171717'
+          backgroundColor: isDarkMode ? '#0d1117' : '#ffffff',
+          color: isDarkMode ? '#e6edf3' : '#1f2328'
         }}
         onDrop={handleDrop}
         onDragOver={handleDragOver}
@@ -68,13 +68,13 @@ export default function Home() {
         {isDragging && (
           <div
             className="absolute inset-0 z-50 flex items-center justify-center pointer-events-none"
-            style={{ backgroundColor: isDarkMode ? 'rgba(17,24,39,0.85)' : 'rgba(255,255,255,0.85)' }}
+            style={{ backgroundColor: isDarkMode ? 'rgba(13,17,23,0.9)' : 'rgba(255,255,255,0.85)' }}
           >
             <div
               className="border-4 border-dashed rounded-2xl p-12 text-center"
               style={{
-                borderColor: isDarkMode ? '#3b82f6' : '#2563eb',
-                color: isDarkMode ? '#93c5fd' : '#2563eb',
+                borderColor: isDarkMode ? '#58a6ff' : '#2563eb',
+                color: isDarkMode ? '#58a6ff' : '#2563eb',
               }}
             >
               <svg className="w-16 h-16 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -102,8 +102,8 @@ export default function Home() {
             <div
               className="w-1/2 border-r transition-colors duration-300"
               style={{
-                backgroundColor: isDarkMode ? '#1f2937' : '#ffffff',
-                borderColor: isDarkMode ? '#374151' : '#e5e7eb'
+                backgroundColor: isDarkMode ? '#0d1117' : '#ffffff',
+                borderColor: isDarkMode ? '#30363d' : '#d0d7de'
               }}
             >
               <MarkdownEditor />
@@ -113,7 +113,7 @@ export default function Home() {
           <div
             className={`${viewMode === 'view' ? 'w-full' : 'w-1/2'} transition-colors duration-300`}
             style={{
-              backgroundColor: isDarkMode ? '#1f2937' : '#ffffff'
+              backgroundColor: isDarkMode ? '#0d1117' : '#ffffff'
             }}
           >
             <MarkdownViewer />

@@ -2,12 +2,12 @@
 
 :root {
   --background: #ffffff;
-  --foreground: #171717;
+  --foreground: #1f2328;
 }
 
 html.dark {
-  --background: #111827;
-  --foreground: #f9fafb;
+  --background: #0d1117;
+  --foreground: #e6edf3;
 }
 
 html, body {
@@ -19,37 +19,32 @@ html, body {
 body {
   background: var(--background) !important;
   color: var(--foreground) !important;
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans', Helvetica, Arial, sans-serif;
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-/* 강제 다크모드 적용 */
 html.dark,
 html.dark body,
 html.dark #__next,
 html.dark #root {
-  background-color: #111827 !important;
-  color: #f9fafb !important;
+  background-color: #0d1117 !important;
+  color: #e6edf3 !important;
 }
 
-/* 라이트모드 강제 적용 */
 html.light,
 html.light body,
 html.light #__next,
 html.light #root {
   background-color: #ffffff !important;
-  color: #171717 !important;
+  color: #1f2328 !important;
 }
 
-
-
-/* 기본 텍스트 선택 색상 */
 ::selection {
-  background-color: #3b82f6;
-  color: white;
+  background-color: #58a6ff;
+  color: #0d1117;
 }
 
 .dark ::selection {
-  background-color: #60a5fa;
-  color: #111827;
+  background-color: #58a6ff;
+  color: #0d1117;
 }

@@ -17,7 +17,7 @@ export const useStore = create<StoreState>()(
   persist(
     (set, _get) => ({
       currentFile: null,
-      isDarkMode: false,
+      isDarkMode: true,
       isLoading: false,
       error: null,
       theme: 'system',
@@ -28,14 +28,7 @@ export const useStore = create<StoreState>()(
       setViewMode: (mode) => set({ viewMode: mode }),
       setLoading: (isLoading) => set({ isLoading }),
       setError: (error) => set({ error }),
-      toggleDarkMode: () => {
-        console.log('toggleDarkMode called'); // 디버깅
-        set((state) => {
-          const newDarkMode = !state.isDarkMode;
-          console.log('Toggling dark mode from', state.isDarkMode, 'to', newDarkMode); // 디버깅
-          return { isDarkMode: newDarkMode };
-        });
-      },
+      toggleDarkMode: () => set((state) => ({ isDarkMode: !state.isDarkMode })),
     }),
     {
       name: 'markdown-viewer-storage',

@@ -60,9 +60,9 @@ export default function MarkdownEditor() {
       <div 
         className="flex items-center justify-between p-4 border-b transition-colors duration-300"
         style={{
-          backgroundColor: isDarkMode ? '#374151' : '#f9fafb',
-          borderColor: isDarkMode ? '#4b5563' : '#e5e7eb',
-          color: isDarkMode ? '#ffffff' : '#111827'
+          backgroundColor: isDarkMode ? '#161b22' : '#f6f8fa',
+          borderColor: isDarkMode ? '#30363d' : '#d0d7de',
+          color: isDarkMode ? '#e6edf3' : '#1f2328'
         }}
       >
         <h2 className="text-lg font-semibold">
@@ -80,8 +80,8 @@ export default function MarkdownEditor() {
         onScroll={handleScroll}
         className="flex-1 p-4 resize-none border-none outline-none font-mono text-sm leading-relaxed transition-colors duration-300"
         style={{
-          backgroundColor: isDarkMode ? '#1f2937' : '#ffffff',
-          color: isDarkMode ? '#f9fafb' : '#111827'
+          backgroundColor: isDarkMode ? '#0d1117' : '#ffffff',
+          color: isDarkMode ? '#e6edf3' : '#1f2328'
         }}
         placeholder="Start typing your markdown..."
         spellCheck={false}

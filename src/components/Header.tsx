@@ -345,9 +345,9 @@ export default function Header() {
     <header 
       className="border-b transition-colors duration-300"
       style={{
-        backgroundColor: isDarkMode ? '#1f2937' : '#ffffff',
-        borderColor: isDarkMode ? '#374151' : '#e5e7eb',
-        color: isDarkMode ? '#ffffff' : '#111827'
+        backgroundColor: isDarkMode ? '#161b22' : '#ffffff',
+        borderColor: isDarkMode ? '#30363d' : '#d0d7de',
+        color: isDarkMode ? '#e6edf3' : '#1f2328'
       }}
     >
       <div className="px-4 py-3 flex items-center justify-between">
@@ -415,15 +415,15 @@ export default function Header() {
                     <div
                       className="absolute right-0 mt-2 w-48 rounded-md shadow-lg z-10"
                       style={{
-                        backgroundColor: isDarkMode ? '#374151' : '#ffffff',
-                        border: `1px solid ${isDarkMode ? '#4b5563' : '#e5e7eb'}`
+                        backgroundColor: isDarkMode ? '#161b22' : '#ffffff',
+                        border: `1px solid ${isDarkMode ? '#30363d' : '#d0d7de'}`
                       }}
                     >
                       <div className="py-1">
                         <button
                           onClick={handleSaveAsMarkdown}
                           className="block w-full text-left px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors"
-                          style={{ color: isDarkMode ? '#f9fafb' : '#111827' }}
+                          style={{ color: isDarkMode ? '#e6edf3' : '#1f2328' }}
                         >
                           <div className="flex items-center">
                             <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -436,7 +436,7 @@ export default function Header() {
                         <button
                           onClick={handleSaveAsHTML}
                           className="block w-full text-left px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors"
-                          style={{ color: isDarkMode ? '#f9fafb' : '#111827' }}
+                          style={{ color: isDarkMode ? '#e6edf3' : '#1f2328' }}
                         >
                           <div className="flex items-center">
                             <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -458,16 +458,16 @@ export default function Header() {
           {/* View/Edit mode toggle */}
           <div
             className="flex rounded-md overflow-hidden border"
-            style={{ borderColor: isDarkMode ? '#4b5563' : '#d1d5db' }}
+            style={{ borderColor: isDarkMode ? '#30363d' : '#d0d7de' }}
           >
             <button
               onClick={() => setViewMode('view')}
               className="inline-flex items-center px-3 py-1.5 text-sm transition-colors"
               style={{
                 backgroundColor: viewMode === 'view'
-                  ? (isDarkMode ? '#3b82f6' : '#2563eb')
-                  : (isDarkMode ? '#374151' : '#f3f4f6'),
-                color: viewMode === 'view' ? '#ffffff' : (isDarkMode ? '#d1d5db' : '#4b5563'),
+                  ? (isDarkMode ? '#1f6feb' : '#2563eb')
+                  : (isDarkMode ? '#21262d' : '#f3f4f6'),
+                color: viewMode === 'view' ? '#ffffff' : (isDarkMode ? '#8b949e' : '#57606a'),
               }}
             >
               <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -481,9 +481,9 @@ export default function Header() {
               className="inline-flex items-center px-3 py-1.5 text-sm transition-colors"
               style={{
                 backgroundColor: viewMode === 'edit'
-                  ? (isDarkMode ? '#3b82f6' : '#2563eb')
-                  : (isDarkMode ? '#374151' : '#f3f4f6'),
-                color: viewMode === 'edit' ? '#ffffff' : (isDarkMode ? '#d1d5db' : '#4b5563'),
+                  ? (isDarkMode ? '#1f6feb' : '#2563eb')
+                  : (isDarkMode ? '#21262d' : '#f3f4f6'),
+                color: viewMode === 'edit' ? '#ffffff' : (isDarkMode ? '#8b949e' : '#57606a'),
               }}
             >
               <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
