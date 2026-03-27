@@ -2,11 +2,11 @@
 
 import { useCallback, useRef, useState, useEffect } from 'react';
 import { useStore } from '@/store/useStore';
-import { generateId, validateMarkdownFile } from '@/lib/utils';
+import { generateId, validateMarkdownFile, DEFAULT_CONTENT } from '@/lib/utils';
 import { MarkdownFile } from '@/types';
 
 export default function Header() {
-  const { currentFile, setCurrentFile, isDarkMode, toggleDarkMode, setError } = useStore();
+  const { currentFile, setCurrentFile, isDarkMode, toggleDarkMode, setError, viewMode, setViewMode } = useStore();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [showSaveDropdown, setShowSaveDropdown] = useState(false);
 
@@ -327,65 +327,17 @@ export default function Header() {
   }, [setCurrentFile]);
 
   const handleReset = useCallback(() => {
-    console.log('Reset button clicked!'); // 디버깅용
-    
-    const defaultContent = `# 🚀 Welcome to Markdown Editor
-
-Start typing your markdown here...
-
-## ✨ Features
-- **Bold text**
-- *Italic text*
-- \`inline code\`
-- [Links](https://example.com)
-
-### 📋 Task Lists
-- [x] Completed task ✅
-- [ ] Pending task ⏳
-- [x] Another completed task 🎉
-
-### 💻 Code blocks
-\`\`\`javascript
-console.log('Hello, World! 🌍');
-\`\`\`
-
-### 📊 Tables
-| Feature | Status | Priority |
-|---------|--------|----------|
-| Markdown parsing | ✅ Done | High |
-| Dark mode | ✅ Done | Medium |
-
-### 📝 Lists
-1. Ordered list
-2. Another item
-   - Nested item
-   - Another nested item
-
-### 💬 Blockquotes
-> This is a blockquote 💡
-> 
-> It can span multiple lines.
-
----
-
-Happy writing! 🚀`;
-
-    // 먼저 현재 파일을 null로 설정
     setCurrentFile(null);
     setError(null);
-    
-    console.log('Setting new content...'); // 디버깅용
-    
-    // 잠시 후 새로운 데모 파일 설정
+
     setTimeout(() => {
       setCurrentFile({
         id: generateId(),
         name: 'demo.md',
-        content: defaultContent,
-        size: defaultContent.length,
+        content: DEFAULT_CONTENT,
+        size: DEFAULT_CONTENT.length,
         lastModified: Date.now(),
       });
-      console.log('New content set!'); // 디버깅용
     }, 10);
   }, [setCurrentFile, setError]);
 
@@ -401,7 +353,7 @@ Happy writing! 🚀`;
       <div className="px-4 py-3 flex items-center justify-between">
         <div className="flex items-center space-x-4">
           <h1 className="text-xl font-bold">
-            Markdown Editor
+            {viewMode === 'view' ? 'Markdown Viewer' : 'Markdown Editor'}
           </h1>
           {currentFile && (
             <span className="text-sm opacity-70">
@@ -411,96 +363,136 @@ Happy writing! 🚀`;
         </div>
         
         <div className="flex items-center space-x-2">
-          <button
-            onClick={handleNewFile}
-            className="inline-flex items-center px-3 py-1.5 text-sm bg-green-600 hover:bg-green-700 text-white rounded-md transition-colors"
-          >
-            <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-            </svg>
-            New
-          </button>
-          
-          <button
-            onClick={handleReset}
-            className="inline-flex items-center px-3 py-1.5 text-sm bg-purple-600 hover:bg-purple-700 text-white rounded-md transition-colors"
-            title="Reset to demo content"
-          >
-            <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-            </svg>
-            Reset
-          </button>
-          
-          <button
-            onClick={() => fileInputRef.current?.click()}
-            className="inline-flex items-center px-3 py-1.5 text-sm bg-blue-600 hover:bg-blue-700 text-white rounded-md transition-colors"
-          >
-            <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
-            </svg>
-            Open
-          </button>
-          
-          {currentFile && (
-            <div className="relative save-dropdown">
+          {viewMode === 'edit' && (
+            <>
               <button
-                onClick={() => setShowSaveDropdown(!showSaveDropdown)}
-                className="inline-flex items-center px-3 py-1.5 text-sm bg-gray-600 hover:bg-gray-700 text-white rounded-md transition-colors"
+                onClick={handleNewFile}
+                className="inline-flex items-center px-3 py-1.5 text-sm bg-green-600 hover:bg-green-700 text-white rounded-md transition-colors"
               >
                 <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
                 </svg>
-                Save
-                <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                </svg>
+                New
               </button>
-              
-              {showSaveDropdown && (
-                <div 
-                  className="absolute right-0 mt-2 w-48 rounded-md shadow-lg z-10"
-                  style={{
-                    backgroundColor: isDarkMode ? '#374151' : '#ffffff',
-                    border: `1px solid ${isDarkMode ? '#4b5563' : '#e5e7eb'}`
-                  }}
-                >
-                  <div className="py-1">
-                    <button
-                      onClick={handleSaveAsMarkdown}
-                      className="block w-full text-left px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors"
-                      style={{ color: isDarkMode ? '#f9fafb' : '#111827' }}
-                    >
-                      <div className="flex items-center">
-                        <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                        </svg>
-                        Markdown (.md)
-                      </div>
-                    </button>
-                    
-                    <button
-                      onClick={handleSaveAsHTML}
-                      className="block w-full text-left px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors"
-                      style={{ color: isDarkMode ? '#f9fafb' : '#111827' }}
-                    >
-                      <div className="flex items-center">
-                        <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
-                        </svg>
-                        HTML (.html)
-                      </div>
-                    </button>
-                    
 
-                  </div>
+              <button
+                onClick={handleReset}
+                className="inline-flex items-center px-3 py-1.5 text-sm bg-purple-600 hover:bg-purple-700 text-white rounded-md transition-colors"
+                title="Reset to demo content"
+              >
+                <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                </svg>
+                Reset
+              </button>
+
+              <button
+                onClick={() => fileInputRef.current?.click()}
+                className="inline-flex items-center px-3 py-1.5 text-sm bg-blue-600 hover:bg-blue-700 text-white rounded-md transition-colors"
+              >
+                <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                </svg>
+                Open
+              </button>
+
+              {currentFile && (
+                <div className="relative save-dropdown">
+                  <button
+                    onClick={() => setShowSaveDropdown(!showSaveDropdown)}
+                    className="inline-flex items-center px-3 py-1.5 text-sm bg-gray-600 hover:bg-gray-700 text-white rounded-md transition-colors"
+                  >
+                    <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                    Save
+                    <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </button>
+
+                  {showSaveDropdown && (
+                    <div
+                      className="absolute right-0 mt-2 w-48 rounded-md shadow-lg z-10"
+                      style={{
+                        backgroundColor: isDarkMode ? '#374151' : '#ffffff',
+                        border: `1px solid ${isDarkMode ? '#4b5563' : '#e5e7eb'}`
+                      }}
+                    >
+                      <div className="py-1">
+                        <button
+                          onClick={handleSaveAsMarkdown}
+                          className="block w-full text-left px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors"
+                          style={{ color: isDarkMode ? '#f9fafb' : '#111827' }}
+                        >
+                          <div className="flex items-center">
+                            <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                            </svg>
+                            Markdown (.md)
+                          </div>
+                        </button>
+
+                        <button
+                          onClick={handleSaveAsHTML}
+                          className="block w-full text-left px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors"
+                          style={{ color: isDarkMode ? '#f9fafb' : '#111827' }}
+                        >
+                          <div className="flex items-center">
+                            <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+                            </svg>
+                            HTML (.html)
+                          </div>
+                        </button>
+                      </div>
+                    </div>
+                  )}
                 </div>
               )}
-            </div>
+            </>
           )}
-          
+
           <div className="border-l border-gray-300 dark:border-gray-600 h-6 mx-2"></div>
-          
+
+          {/* View/Edit mode toggle */}
+          <div
+            className="flex rounded-md overflow-hidden border"
+            style={{ borderColor: isDarkMode ? '#4b5563' : '#d1d5db' }}
+          >
+            <button
+              onClick={() => setViewMode('view')}
+              className="inline-flex items-center px-3 py-1.5 text-sm transition-colors"
+              style={{
+                backgroundColor: viewMode === 'view'
+                  ? (isDarkMode ? '#3b82f6' : '#2563eb')
+                  : (isDarkMode ? '#374151' : '#f3f4f6'),
+                color: viewMode === 'view' ? '#ffffff' : (isDarkMode ? '#d1d5db' : '#4b5563'),
+              }}
+            >
+              <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+              </svg>
+              View
+            </button>
+            <button
+              onClick={() => setViewMode('edit')}
+              className="inline-flex items-center px-3 py-1.5 text-sm transition-colors"
+              style={{
+                backgroundColor: viewMode === 'edit'
+                  ? (isDarkMode ? '#3b82f6' : '#2563eb')
+                  : (isDarkMode ? '#374151' : '#f3f4f6'),
+                color: viewMode === 'edit' ? '#ffffff' : (isDarkMode ? '#d1d5db' : '#4b5563'),
+              }}
+            >
+              <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+              </svg>
+              Edit
+            </button>
+          </div>
+
           <button
             onClick={toggleDarkMode}
             className="p-1.5 rounded-md bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 transition-colors"

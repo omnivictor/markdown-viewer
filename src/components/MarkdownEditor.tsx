@@ -1,6 +1,7 @@
 'use client';
 
 import { useStore } from '@/store/useStore';
+import { DEFAULT_CONTENT } from '@/lib/utils';
 import { useCallback, useRef, useEffect } from 'react';
 
 export default function MarkdownEditor() {
@@ -54,47 +55,6 @@ export default function MarkdownEditor() {
     };
   }, []);
 
-  const defaultContent = `# 🚀 Welcome to Markdown Editor
-
-Start typing your markdown here...
-
-## ✨ Features
-- **Bold text**
-- *Italic text*
-- \`inline code\`
-- [Links](https://example.com)
-
-### 📋 Task Lists
-- [x] Completed task ✅
-- [ ] Pending task ⏳
-- [x] Another completed task 🎉
-
-### 💻 Code blocks
-\`\`\`javascript
-console.log('Hello, World! 🌍');
-\`\`\`
-
-### 📊 Tables
-| Feature | Status | Priority |
-|---------|--------|----------|
-| Markdown parsing | ✅ Done | High |
-| Dark mode | ✅ Done | Medium |
-
-### 📝 Lists
-1. Ordered list
-2. Another item
-   - Nested item
-   - Another nested item
-
-### 💬 Blockquotes
-> This is a blockquote 💡
-> 
-> It can span multiple lines.
-
----
-
-Happy writing! 🚀`;
-
   return (
     <div className="h-full flex flex-col">
       <div 
@@ -109,13 +69,13 @@ Happy writing! 🚀`;
           Markdown Editor
         </h2>
         <div className="text-sm opacity-70">
-          {currentFile?.content?.length || defaultContent.length} characters
+          {currentFile?.content?.length || DEFAULT_CONTENT.length} characters
         </div>
       </div>
       
       <textarea
         ref={textareaRef}
-        value={currentFile?.content || defaultContent}
+        value={currentFile?.content || DEFAULT_CONTENT}
         onChange={handleTextChange}
         onScroll={handleScroll}
         className="flex-1 p-4 resize-none border-none outline-none font-mono text-sm leading-relaxed transition-colors duration-300"

@@ -8,6 +8,7 @@ import rehypeHighlight from 'rehype-highlight';
 import rehypeRaw from 'rehype-raw';
 import rehypeSlug from 'rehype-slug';
 import { useStore } from '@/store/useStore';
+import { DEFAULT_CONTENT } from '@/lib/utils';
 import { useEffect, useRef, type ComponentProps } from 'react';
 
 // Define a type for the custom code component's props
@@ -19,48 +20,7 @@ export default function MarkdownViewer() {
   const { currentFile, isDarkMode } = useStore();
   const previewRef = useRef<HTMLDivElement>(null);
 
-  const defaultContent = `# 🚀 Welcome to Markdown Editor
-
-Start typing your markdown here...
-
-## ✨ Features
-- **Bold text**
-- *Italic text*
-- \`inline code\`
-- [Links](https://example.com)
-
-### 📋 Task Lists
-- [x] Completed task ✅
-- [ ] Pending task ⏳
-- [x] Another completed task 🎉
-
-### 💻 Code blocks
-\`\`\`javascript
-console.log('Hello, World! 🌍');
-\`\`\`
-
-### 📊 Tables
-| Feature | Status | Priority |
-|---------|--------|----------|
-| Markdown parsing | ✅ Done | High |
-| Dark mode | ✅ Done | Medium |
-
-### 📝 Lists
-1. Ordered list
-2. Another item
-   - Nested item
-   - Another nested item
-
-### 💬 Blockquotes
-> This is a blockquote 💡
-> 
-> It can span multiple lines.
-
----
-
-Happy writing! 🚀`;
-
-  const content = currentFile?.content || defaultContent;
+  const content = currentFile?.content || DEFAULT_CONTENT;
 
   useEffect(() => {
     const handleEditorScroll = (e: CustomEvent) => {

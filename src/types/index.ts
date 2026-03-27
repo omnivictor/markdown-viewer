@@ -14,3 +14,4 @@ export interface AppState {
 }
 
 export type Theme = 'light' | 'dark' | 'system';
+export type ViewMode = 'view' | 'edit';
