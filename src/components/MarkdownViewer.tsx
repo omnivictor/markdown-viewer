@@ -7,7 +7,7 @@ import remarkBreaks from 'remark-breaks';
 import rehypeHighlight from 'rehype-highlight';
 import rehypeRaw from 'rehype-raw';
 import rehypeSlug from 'rehype-slug';
-import { useStore } from '@/store/useStore';
+import { useStore, getActiveFile } from '@/store/useStore';
 import { DEFAULT_CONTENT } from '@/lib/utils';
 import { useEffect, useRef, type ComponentProps } from 'react';
 
@@ -17,10 +17,11 @@ type CodeProps = ComponentProps<'code'> & {
 };
 
 export default function MarkdownViewer() {
-  const { currentFile, isDarkMode } = useStore();
+  const { isDarkMode } = useStore();
+  const activeFile = useStore(getActiveFile);
   const previewRef = useRef<HTMLDivElement>(null);
 
-  const content = currentFile?.content || DEFAULT_CONTENT;
+  const content = activeFile?.content || DEFAULT_CONTENT;
 
   useEffect(() => {
     const handleEditorScroll = (e: CustomEvent) => {

@@ -7,7 +7,8 @@ export interface MarkdownFile {
 }
 
 export interface AppState {
-  currentFile: MarkdownFile | null;
+  files: MarkdownFile[];
+  activeFileId: string | null;
   isDarkMode: boolean;
   isLoading: boolean;
   error: string | null;

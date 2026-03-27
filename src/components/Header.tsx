@@ -1,12 +1,13 @@
 'use client';
 
 import { useCallback, useRef, useState, useEffect } from 'react';
-import { useStore } from '@/store/useStore';
+import { useStore, getActiveFile } from '@/store/useStore';
 import { generateId, validateMarkdownFile, DEFAULT_CONTENT } from '@/lib/utils';
 import { MarkdownFile } from '@/types';
 
 export default function Header() {
-  const { currentFile, setCurrentFile, isDarkMode, toggleDarkMode, setError, viewMode, setViewMode } = useStore();
+  const { isDarkMode, toggleDarkMode, setError, viewMode, setViewMode, openFile, clearFiles } = useStore();
+  const activeFile = useStore(getActiveFile);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [showSaveDropdown, setShowSaveDropdown] = useState(false);
 
@@ -48,12 +49,12 @@ export default function Header() {
         size: file.size,
         lastModified: file.lastModified || Date.now(),
       };
-      setCurrentFile(markdownFile);
+      openFile(markdownFile);
       setError(null);
     } catch (_error) {
       setError('Failed to read file. Please try again.');
     }
-  }, [setCurrentFile, setError]);
+  }, [openFile, setError]);
 
   const handleFileSelect = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
@@ -63,13 +64,13 @@ export default function Header() {
   }, [handleFileUpload]);
 
   const handleDownload = useCallback(async () => {
-    if (!currentFile) return;
+    if (!activeFile) return;
     
     try {
       // 최신 브라우저에서 File System Access API 지원 확인
       if ('showSaveFilePicker' in window) {
         const fileHandle = await (window as unknown as any).showSaveFilePicker({
-          suggestedName: currentFile.name,
+          suggestedName: activeFile.name,
           types: [
             {
               description: 'Markdown files',
@@ -82,15 +83,15 @@ export default function Header() {
         });
         
         const writable = await fileHandle.createWritable();
-        await writable.write(currentFile.content);
+        await writable.write(activeFile.content);
         await writable.close();
       } else {
         // 기존 방식 (File System Access API 미지원 브라우저)
-        const blob = new Blob([currentFile.content], { type: 'text/markdown' });
+        const blob = new Blob([activeFile.content], { type: 'text/markdown' });
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = currentFile.name;
+        a.download = activeFile.name;
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
@@ -100,18 +101,18 @@ export default function Header() {
       if ((error as Error).name !== 'AbortError') {
         console.error('파일 저장 오류:', error);
         // 오류 발생 시 기존 방식으로 폴백
-        const blob = new Blob([currentFile.content], { type: 'text/markdown' });
+        const blob = new Blob([activeFile.content], { type: 'text/markdown' });
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = currentFile.name;
+        a.download = activeFile.name;
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
         URL.revokeObjectURL(url);
       }
     }
-  }, [currentFile]);
+  }, [activeFile]);
 
   const handleSaveAsMarkdown = useCallback(() => {
     handleDownload();
@@ -119,7 +120,7 @@ export default function Header() {
   }, [handleDownload]);
 
   const handleSaveAsHTML = useCallback(async () => {
-    if (!currentFile) return;
+    if (!activeFile) return;
     
     // 현재 미리보기 영역의 HTML을 가져오기
     const previewElement = document.querySelector('.prose');
@@ -143,7 +144,7 @@ export default function Header() {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>${currentFile.name}</title>
+    <title>${activeFile.name}</title>
     <style>
         body { 
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif; 
@@ -268,7 +269,7 @@ export default function Header() {
       // 최신 브라우저에서 File System Access API 지원 확인
       if ('showSaveFilePicker' in window) {
         const fileHandle = await (window as unknown as any).showSaveFilePicker({
-          suggestedName: currentFile.name.replace(/\.md$/, '.html'),
+          suggestedName: activeFile.name.replace(/\.md$/, '.html'),
           types: [
             {
               description: 'HTML files',
@@ -289,7 +290,7 @@ export default function Header() {
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = currentFile.name.replace(/\.md$/, '.html');
+        a.download = activeFile.name.replace(/\.md$/, '.html');
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
@@ -303,7 +304,7 @@ export default function Header() {
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = currentFile.name.replace(/\.md$/, '.html');
+        a.download = activeFile.name.replace(/\.md$/, '.html');
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
@@ -312,34 +313,31 @@ export default function Header() {
     }
     
     setShowSaveDropdown(false);
-  }, [currentFile]);
+  }, [activeFile]);
 
 
 
   const handleNewFile = useCallback(() => {
-    setCurrentFile({
+    openFile({
       id: generateId(),
       name: 'untitled.md',
       content: '# New Document\n\nStart typing here...',
       size: 0,
       lastModified: Date.now(),
     });
-  }, [setCurrentFile]);
+  }, [openFile]);
 
   const handleReset = useCallback(() => {
-    setCurrentFile(null);
+    clearFiles();
     setError(null);
-
-    setTimeout(() => {
-      setCurrentFile({
-        id: generateId(),
-        name: 'demo.md',
-        content: DEFAULT_CONTENT,
-        size: DEFAULT_CONTENT.length,
-        lastModified: Date.now(),
-      });
-    }, 10);
-  }, [setCurrentFile, setError]);
+    openFile({
+      id: generateId(),
+      name: 'demo.md',
+      content: DEFAULT_CONTENT,
+      size: DEFAULT_CONTENT.length,
+      lastModified: Date.now(),
+    });
+  }, [clearFiles, openFile, setError]);
 
   return (
     <header 
@@ -355,14 +353,9 @@ export default function Header() {
           <h1 className="text-xl font-bold">
             {viewMode === 'view' ? 'Markdown Viewer' : 'Markdown Editor'}
           </h1>
-          {currentFile && (
-            <span className="text-sm opacity-70">
-              {currentFile.name}
-            </span>
-          )}
           {viewMode === 'edit' && (
             <span className="text-xs" style={{ color: isDarkMode ? '#8b949e' : '#57606a' }}>
-              {(currentFile?.content || DEFAULT_CONTENT).length} chars
+              {(activeFile?.content || DEFAULT_CONTENT).length} chars
             </span>
           )}
         </div>
@@ -401,7 +394,7 @@ export default function Header() {
                 Open
               </button>
 
-              {currentFile && (
+              {activeFile && (
                 <div className="relative save-dropdown">
                   <button
                     onClick={() => setShowSaveDropdown(!showSaveDropdown)}

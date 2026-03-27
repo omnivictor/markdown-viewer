@@ -1,43 +1,40 @@
 'use client';
 
-import { useStore } from '@/store/useStore';
+import { useStore, getActiveFile } from '@/store/useStore';
 import { DEFAULT_CONTENT } from '@/lib/utils';
 import { useCallback, useRef, useEffect } from 'react';
+import { generateId } from '@/lib/utils';
 
 export default function MarkdownEditor() {
-  const { currentFile, setCurrentFile, isDarkMode } = useStore();
+  const { isDarkMode, openFile, updateFileContent } = useStore();
+  const activeFile = useStore(getActiveFile);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   const handleTextChange = useCallback((e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const content = e.target.value;
-    if (currentFile) {
-      setCurrentFile({
-        ...currentFile,
-        content,
-      });
+    if (activeFile) {
+      updateFileContent(activeFile.id, content);
     } else {
       // Create a new file if none exists
-      setCurrentFile({
-        id: Math.random().toString(36).substr(2, 9),
+      openFile({
+        id: generateId(),
         name: 'untitled.md',
         content,
         size: content.length,
         lastModified: Date.now(),
       });
     }
-  }, [currentFile, setCurrentFile]);
+  }, [activeFile, updateFileContent, openFile]);
 
   const handleScroll = useCallback((e: React.UIEvent<HTMLTextAreaElement>) => {
     const textarea = e.currentTarget;
     const scrollPercentage = textarea.scrollTop / (textarea.scrollHeight - textarea.clientHeight);
-    
-    // Dispatch scroll event for preview synchronization
-    window.dispatchEvent(new CustomEvent('editor-scroll', { 
-      detail: { scrollPercentage } 
+
+    window.dispatchEvent(new CustomEvent('editor-scroll', {
+      detail: { scrollPercentage }
     }));
   }, []);
 
-  // Listen for preview scroll events
   useEffect(() => {
     const handlePreviewScroll = (e: CustomEvent) => {
       if (textareaRef.current) {
@@ -49,7 +46,6 @@ export default function MarkdownEditor() {
     };
 
     window.addEventListener('preview-scroll', handlePreviewScroll as EventListener);
-
     return () => {
       window.removeEventListener('preview-scroll', handlePreviewScroll as EventListener);
     };
@@ -59,7 +55,7 @@ export default function MarkdownEditor() {
     <div className="h-full flex flex-col">
       <textarea
         ref={textareaRef}
-        value={currentFile?.content || DEFAULT_CONTENT}
+        value={activeFile?.content || DEFAULT_CONTENT}
         onChange={handleTextChange}
         onScroll={handleScroll}
         className="flex-1 p-4 resize-none border-none outline-none font-mono text-sm leading-relaxed transition-colors duration-300"
