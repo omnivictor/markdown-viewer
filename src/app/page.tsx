@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useState } from 'react';
+import { useCallback, useState, useRef } from 'react';
 import { useStore } from '@/store/useStore';
 import { generateId, validateMarkdownFile } from '@/lib/utils';
 import { MarkdownFile } from '@/types';
@@ -10,9 +10,12 @@ import MarkdownViewer from '@/components/MarkdownViewer';
 import ThemeProvider from '@/components/ThemeProvider';
 
 export default function Home() {
-  const { error, isDarkMode, viewMode, setCurrentFile, setError } = useStore();
+  const { error, isDarkMode, viewMode, splitRatio, setSplitRatio, setCurrentFile, setError } = useStore();
   const [isDragging, setIsDragging] = useState(false);
+  const [isResizing, setIsResizing] = useState(false);
+  const mainRef = useRef<HTMLElement>(null);
 
+  // File drag & drop
   const handleDrop = useCallback((e: React.DragEvent) => {
     e.preventDefault();
     setIsDragging(false);
@@ -53,10 +56,36 @@ export default function Home() {
     setIsDragging(false);
   }, []);
 
+  // Panel resize
+  const handleResizeStart = useCallback((e: React.MouseEvent) => {
+    e.preventDefault();
+    setIsResizing(true);
+
+    const handleMouseMove = (e: MouseEvent) => {
+      if (!mainRef.current) return;
+      const rect = mainRef.current.getBoundingClientRect();
+      const ratio = ((e.clientX - rect.left) / rect.width) * 100;
+      setSplitRatio(ratio);
+    };
+
+    const handleMouseUp = () => {
+      setIsResizing(false);
+      document.removeEventListener('mousemove', handleMouseMove);
+      document.removeEventListener('mouseup', handleMouseUp);
+      document.body.style.cursor = '';
+      document.body.style.userSelect = '';
+    };
+
+    document.body.style.cursor = 'col-resize';
+    document.body.style.userSelect = 'none';
+    document.addEventListener('mousemove', handleMouseMove);
+    document.addEventListener('mouseup', handleMouseUp);
+  }, [setSplitRatio]);
+
   return (
     <ThemeProvider>
       <div
-        className="h-screen flex flex-col transition-all duration-300 relative"
+        className="h-screen flex flex-col relative"
         style={{
           backgroundColor: isDarkMode ? '#0d1117' : '#ffffff',
           color: isDarkMode ? '#e6edf3' : '#1f2328'
@@ -86,38 +115,66 @@ export default function Home() {
           </div>
         )}
         <Header />
-        
+
         {error && (
-          <div className={`mx-4 mt-4 p-3 rounded-lg border ${
-            isDarkMode 
-              ? 'bg-red-900/20 border-red-800 text-red-400' 
+          <div className={`mx-4 mt-2 p-3 rounded-lg border ${
+            isDarkMode
+              ? 'bg-red-900/20 border-red-800 text-red-400'
               : 'bg-red-50 border-red-200 text-red-700'
           }`}>
             <p className="text-sm">{error}</p>
           </div>
         )}
-        
-        <main className="flex-1 flex min-h-0">
+
+        <main ref={mainRef} className="flex-1 flex min-h-0">
           {viewMode === 'edit' && (
-            <div
-              className="w-1/2 border-r transition-colors duration-300"
-              style={{
-                backgroundColor: isDarkMode ? '#0d1117' : '#ffffff',
-                borderColor: isDarkMode ? '#30363d' : '#d0d7de'
-              }}
-            >
-              <MarkdownEditor />
-            </div>
+            <>
+              {/* Editor panel */}
+              <div
+                style={{
+                  width: `${splitRatio}%`,
+                  backgroundColor: isDarkMode ? '#0d1117' : '#ffffff',
+                }}
+              >
+                <MarkdownEditor />
+              </div>
+
+              {/* Resize handle */}
+              <div
+                className="relative flex-shrink-0 z-10 group"
+                style={{
+                  width: '5px',
+                  cursor: 'col-resize',
+                  backgroundColor: isDarkMode ? '#30363d' : '#d0d7de',
+                }}
+                onMouseDown={handleResizeStart}
+              >
+                <div
+                  className="absolute inset-y-0 -left-1 -right-1 group-hover:bg-blue-500/30"
+                  style={{
+                    backgroundColor: isResizing ? (isDarkMode ? 'rgba(88,166,255,0.4)' : 'rgba(37,99,235,0.3)') : undefined,
+                  }}
+                />
+              </div>
+
+              {/* Preview panel */}
+              <div
+                className="flex-1 min-w-0"
+                style={{ backgroundColor: isDarkMode ? '#0d1117' : '#ffffff' }}
+              >
+                <MarkdownViewer />
+              </div>
+            </>
           )}
 
-          <div
-            className={`${viewMode === 'view' ? 'w-full' : 'w-1/2'} transition-colors duration-300`}
-            style={{
-              backgroundColor: isDarkMode ? '#0d1117' : '#ffffff'
-            }}
-          >
-            <MarkdownViewer />
-          </div>
+          {viewMode === 'view' && (
+            <div
+              className="w-full"
+              style={{ backgroundColor: isDarkMode ? '#0d1117' : '#ffffff' }}
+            >
+              <MarkdownViewer />
+            </div>
+          )}
         </main>
       </div>
     </ThemeProvider>

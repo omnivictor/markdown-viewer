@@ -77,19 +77,6 @@ export default function MarkdownViewer() {
   return (
     <div className="h-full flex flex-col">
       <div
-        className="flex items-center justify-between p-4 border-b transition-colors duration-300"
-        style={{
-          backgroundColor: c.bgSubtle,
-          borderColor: c.border,
-          color: c.text
-        }}
-      >
-        <h2 className="text-lg font-semibold">
-          Preview
-        </h2>
-      </div>
-
-      <div
         ref={previewRef}
         className="flex-1 overflow-y-auto transition-colors duration-300"
         style={{ backgroundColor: c.bg }}

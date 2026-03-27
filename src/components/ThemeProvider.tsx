@@ -10,43 +10,47 @@ export default function ThemeProvider({ children }: { children: React.ReactNode 
     const html = document.documentElement;
     const body = document.body;
 
+    // Disable transitions during theme switch to prevent partial updates
+    html.style.setProperty('--transition-override', 'none');
+    document.querySelectorAll('[style*="transition"], [class*="transition"]').forEach(el => {
+      (el as HTMLElement).style.transition = 'none';
+    });
+
     html.classList.remove('dark', 'light');
     body.classList.remove('dark', 'light');
 
-    const rootElements = [
-      document.getElementById('__next'),
-      document.getElementById('root'),
-      body,
-      html
-    ].filter(Boolean);
+    const bg = isDarkMode ? '#0d1117' : '#ffffff';
+    const fg = isDarkMode ? '#e6edf3' : '#1f2328';
 
     if (isDarkMode) {
       html.classList.add('dark');
       body.classList.add('dark');
-      html.style.colorScheme = 'dark';
-
-      rootElements.forEach(el => {
-        if (el) {
-          (el as HTMLElement).style.backgroundColor = '#0d1117';
-          (el as HTMLElement).style.color = '#e6edf3';
-        }
-      });
-      body.style.setProperty('background-color', '#0d1117', 'important');
-      body.style.setProperty('color', '#e6edf3', 'important');
     } else {
       html.classList.add('light');
       body.classList.add('light');
-      html.style.colorScheme = 'light';
-
-      rootElements.forEach(el => {
-        if (el) {
-          (el as HTMLElement).style.backgroundColor = '#ffffff';
-          (el as HTMLElement).style.color = '#1f2328';
-        }
-      });
-      body.style.setProperty('background-color', '#ffffff', 'important');
-      body.style.setProperty('color', '#1f2328', 'important');
     }
+    html.style.colorScheme = isDarkMode ? 'dark' : 'light';
+
+    // Apply to all root elements
+    [html, body, document.getElementById('__next'), document.getElementById('root')]
+      .filter(Boolean)
+      .forEach(el => {
+        (el as HTMLElement).style.backgroundColor = bg;
+        (el as HTMLElement).style.color = fg;
+      });
+
+    body.style.setProperty('background-color', bg, 'important');
+    body.style.setProperty('color', fg, 'important');
+
+    // Re-enable transitions after a frame
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        document.querySelectorAll('[style*="transition: none"]').forEach(el => {
+          (el as HTMLElement).style.transition = '';
+        });
+        html.style.removeProperty('--transition-override');
+      });
+    });
   }, [isDarkMode]);
 
   return <>{children}</>;

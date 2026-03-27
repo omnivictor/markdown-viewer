@@ -57,22 +57,6 @@ export default function MarkdownEditor() {
 
   return (
     <div className="h-full flex flex-col">
-      <div 
-        className="flex items-center justify-between p-4 border-b transition-colors duration-300"
-        style={{
-          backgroundColor: isDarkMode ? '#161b22' : '#f6f8fa',
-          borderColor: isDarkMode ? '#30363d' : '#d0d7de',
-          color: isDarkMode ? '#e6edf3' : '#1f2328'
-        }}
-      >
-        <h2 className="text-lg font-semibold">
-          Markdown Editor
-        </h2>
-        <div className="text-sm opacity-70">
-          {currentFile?.content?.length || DEFAULT_CONTENT.length} characters
-        </div>
-      </div>
-      
       <textarea
         ref={textareaRef}
         value={currentFile?.content || DEFAULT_CONTENT}

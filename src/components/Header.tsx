@@ -360,6 +360,11 @@ export default function Header() {
               {currentFile.name}
             </span>
           )}
+          {viewMode === 'edit' && (
+            <span className="text-xs" style={{ color: isDarkMode ? '#8b949e' : '#57606a' }}>
+              {(currentFile?.content || DEFAULT_CONTENT).length} chars
+            </span>
+          )}
         </div>
         
         <div className="flex items-center space-x-2">
