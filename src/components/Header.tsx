@@ -343,77 +343,73 @@ export default function Header() {
         </div>
         
         <div className="flex items-center space-x-2">
-          {viewMode === 'edit' && (
-            <>
-              {/* New button */}
+          {/* New button — always visible */}
+          <button
+            type="button"
+            onClick={handleNewFile}
+            className="gh-btn-secondary"
+          >
+            <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+            </svg>
+            New
+          </button>
+
+          {/* Open button — always visible */}
+          <button
+            type="button"
+            onClick={() => fileInputRef.current?.click()}
+            className="gh-btn-secondary"
+          >
+            <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+            </svg>
+            Open
+          </button>
+
+          {/* Save dropdown — edit mode only */}
+          {viewMode === 'edit' && activeFile && (
+            <div className="relative save-dropdown">
               <button
                 type="button"
-                onClick={handleNewFile}
+                onClick={() => setShowSaveDropdown(!showSaveDropdown)}
                 className="gh-btn-secondary"
               >
                 <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                 </svg>
-                New
+                Save
+                <svg className="w-3 h-3 ml-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
               </button>
 
-              {/* Open button */}
-              <button
-                type="button"
-                onClick={() => fileInputRef.current?.click()}
-                className="gh-btn-secondary"
-              >
-                <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
-                </svg>
-                Open
-              </button>
-
-              {/* Save dropdown */}
-              {activeFile && (
-                <div className="relative save-dropdown">
+              {showSaveDropdown && (
+                <div className="gh-dropdown">
                   <button
                     type="button"
-                    onClick={() => setShowSaveDropdown(!showSaveDropdown)}
-                    className="gh-btn-secondary"
+                    onClick={handleSaveAsMarkdown}
+                    className="gh-dropdown-item"
                   >
-                    <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    <svg className="w-4 h-4 mr-2 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                     </svg>
-                    Save
-                    <svg className="w-3 h-3 ml-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                    </svg>
+                    Markdown (.md)
                   </button>
 
-                  {showSaveDropdown && (
-                    <div className="gh-dropdown">
-                      <button
-                        type="button"
-                        onClick={handleSaveAsMarkdown}
-                        className="gh-dropdown-item"
-                      >
-                        <svg className="w-4 h-4 mr-2 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                        </svg>
-                        Markdown (.md)
-                      </button>
-
-                      <button
-                        type="button"
-                        onClick={handleSaveAsHTML}
-                        className="gh-dropdown-item"
-                      >
-                        <svg className="w-4 h-4 mr-2 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
-                        </svg>
-                        HTML (.html)
-                      </button>
-                    </div>
-                  )}
+                  <button
+                    type="button"
+                    onClick={handleSaveAsHTML}
+                    className="gh-dropdown-item"
+                  >
+                    <svg className="w-4 h-4 mr-2 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+                    </svg>
+                    HTML (.html)
+                  </button>
                 </div>
               )}
-            </>
+            </div>
           )}
 
           {/* Vertical divider */}
