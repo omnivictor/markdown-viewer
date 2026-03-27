@@ -1,12 +1,11 @@
 'use client';
 
 import { useStore, getActiveFile } from '@/store/useStore';
-import { DEFAULT_CONTENT } from '@/lib/utils';
+import { DEFAULT_CONTENT, generateId } from '@/lib/utils';
 import { useCallback, useRef, useEffect } from 'react';
-import { generateId } from '@/lib/utils';
 
 export default function MarkdownEditor() {
-  const { isDarkMode, openFile, updateFileContent } = useStore();
+  const { openFile, updateFileContent } = useStore();
   const activeFile = useStore(getActiveFile);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
@@ -15,7 +14,6 @@ export default function MarkdownEditor() {
     if (activeFile) {
       updateFileContent(activeFile.id, content);
     } else {
-      // Create a new file if none exists
       openFile({
         id: generateId(),
         name: 'untitled.md',
@@ -29,7 +27,6 @@ export default function MarkdownEditor() {
   const handleScroll = useCallback((e: React.UIEvent<HTMLTextAreaElement>) => {
     const textarea = e.currentTarget;
     const scrollPercentage = textarea.scrollTop / (textarea.scrollHeight - textarea.clientHeight);
-
     window.dispatchEvent(new CustomEvent('editor-scroll', {
       detail: { scrollPercentage }
     }));
@@ -40,15 +37,11 @@ export default function MarkdownEditor() {
       if (textareaRef.current) {
         const { scrollPercentage } = e.detail;
         const textarea = textareaRef.current;
-        const scrollTop = scrollPercentage * (textarea.scrollHeight - textarea.clientHeight);
-        textarea.scrollTop = scrollTop;
+        textarea.scrollTop = scrollPercentage * (textarea.scrollHeight - textarea.clientHeight);
       }
     };
-
     window.addEventListener('preview-scroll', handlePreviewScroll as EventListener);
-    return () => {
-      window.removeEventListener('preview-scroll', handlePreviewScroll as EventListener);
-    };
+    return () => window.removeEventListener('preview-scroll', handlePreviewScroll as EventListener);
   }, []);
 
   return (
@@ -58,11 +51,7 @@ export default function MarkdownEditor() {
         value={activeFile?.content || DEFAULT_CONTENT}
         onChange={handleTextChange}
         onScroll={handleScroll}
-        className="flex-1 p-4 resize-none border-none outline-none font-mono text-sm leading-relaxed transition-colors duration-300"
-        style={{
-          backgroundColor: isDarkMode ? '#0d1117' : '#ffffff',
-          color: isDarkMode ? '#e6edf3' : '#1f2328'
-        }}
+        className="gh-editor flex-1 p-4 resize-none border-none outline-none font-mono text-sm leading-relaxed"
         placeholder="Start typing your markdown..."
         spellCheck={false}
       />

@@ -3,11 +3,109 @@
 :root {
   --background: #ffffff;
   --foreground: #1f2328;
+
+  /* Header surface */
+  --header-bg: #ffffff;
+
+  /* Header button tokens — light mode */
+  --btn-secondary-bg: #f6f8fa;
+  --btn-secondary-bg-hover: #eaeef2;
+  --btn-secondary-border: #d0d7de;
+  --btn-secondary-border-hover: #8c959f;
+  --btn-secondary-text: #24292f;
+  --btn-active-bg: #0969da;
+  --btn-active-text: #ffffff;
+  --btn-inactive-bg: #f6f8fa;
+  --btn-inactive-bg-hover: #eaeef2;
+  --btn-inactive-text: #57606a;
+  --btn-inactive-text-hover: #24292f;
+  --btn-icon-text: #57606a;
+  --btn-icon-bg-hover: #f6f8fa;
+  --btn-icon-border-hover: #d0d7de;
+  --dropdown-bg: #ffffff;
+  --dropdown-border: #d0d7de;
+  --dropdown-text: #24292f;
+  --dropdown-bg-hover: #f6f8fa;
+  --header-divider: #d0d7de;
+
+  /* Canvas tokens — light mode */
+  --canvas-bg: #ffffff;
+  --canvas-subtle: #f6f8fa;
+  --canvas-border: #d0d7de;
+  --canvas-text: #1f2328;
+  --canvas-text-muted: #57606a;
+  --canvas-link: #0969da;
+
+  /* Tab bar */
+  --tab-bg: #f6f8fa;
+  --tab-active-bg: #ffffff;
+  --tab-active-border: #0969da;
+  --tab-text: #57606a;
+  --tab-text-active: #1f2328;
+  --tab-hover-bg: #eaeef2;
+  --tab-close-hover: #cf222e;
+
+  /* Resize handle */
+  --resize-handle: #d0d7de;
+  --resize-handle-active: rgba(9,105,218,0.3);
+
+  /* Drag overlay */
+  --drag-overlay: rgba(255,255,255,0.85);
+  --drag-accent: #0969da;
 }
 
 html.dark {
   --background: #0d1117;
   --foreground: #e6edf3;
+
+  /* Header surface */
+  --header-bg: #161b22;
+
+  /* Canvas tokens — dark mode */
+  --canvas-bg: #0d1117;
+  --canvas-subtle: #161b22;
+  --canvas-border: #30363d;
+  --canvas-text: #e6edf3;
+  --canvas-text-muted: #8b949e;
+  --canvas-link: #58a6ff;
+
+  /* Tab bar */
+  --tab-bg: #010409;
+  --tab-active-bg: #0d1117;
+  --tab-active-border: #58a6ff;
+  --tab-text: #8b949e;
+  --tab-text-active: #e6edf3;
+  --tab-hover-bg: #161b22;
+  --tab-close-hover: #da3633;
+
+  /* Resize handle */
+  --resize-handle: #30363d;
+  --resize-handle-active: rgba(88,166,255,0.4);
+
+  /* Drag overlay */
+  --drag-overlay: rgba(13,17,23,0.9);
+  --drag-accent: #58a6ff;
+
+  /* Header button tokens — dark mode */
+  --btn-secondary-bg: #21262d;
+  --btn-secondary-bg-hover: #30363d;
+  --btn-secondary-border: #30363d;
+  --btn-secondary-border-hover: #8b949e;
+  --btn-secondary-text: #c9d1d9;
+  --btn-active-bg: #1f6feb;
+  --btn-active-text: #ffffff;
+  --btn-inactive-bg: #21262d;
+  --btn-inactive-bg-hover: #30363d;
+  --btn-inactive-text: #8b949e;
+  --btn-inactive-text-hover: #c9d1d9;
+  --btn-icon-text: #8b949e;
+  --btn-icon-bg-hover: #21262d;
+  --btn-icon-border-hover: #30363d;
+  --dropdown-bg: #161b22;
+  --dropdown-border: #30363d;
+  --dropdown-text: #e6edf3;
+  --dropdown-bg-hover: #21262d;
+  --header-divider: #30363d;
 }
 
 html, body {
@@ -47,4 +145,295 @@ html.light #root {
 .dark ::selection {
   background-color: #58a6ff;
   color: #0d1117;
+}
+
+/* =============================================
+   Header button system — GitHub design tokens
+   ============================================= */
+
+/* App header bar */
+.gh-app-header {
+  background-color: var(--header-bg);
+  border-color: var(--btn-secondary-border);
+  color: var(--foreground);
+}
+
+/* Character count label */
+.gh-char-count {
+  color: var(--btn-icon-text);
+}
+
+/* Secondary buttons: New, Open, Save */
+.gh-btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.375rem 0.75rem;
+  font-size: 0.875rem;
+  border-radius: 0.375rem;
+  border: 1px solid var(--btn-secondary-border);
+  background-color: var(--btn-secondary-bg);
+  color: var(--btn-secondary-text);
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+  cursor: pointer;
+}
+
+.gh-btn-secondary:hover {
+  background-color: var(--btn-secondary-bg-hover);
+  border-color: var(--btn-secondary-border-hover);
+}
+
+/* Segmented control wrapper */
+.gh-segmented {
+  display: flex;
+  border-radius: 0.375rem;
+  overflow: hidden;
+  border: 1px solid var(--btn-secondary-border);
+}
+
+/* Individual segment button */
+.gh-segment {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.375rem 0.75rem;
+  font-size: 0.875rem;
+  background-color: var(--btn-inactive-bg);
+  color: var(--btn-inactive-text);
+  transition: background-color 0.15s ease, color 0.15s ease;
+  cursor: pointer;
+  border: none;
+}
+
+.gh-segment + .gh-segment {
+  border-left: 1px solid var(--btn-secondary-border);
+}
+
+.gh-segment:hover {
+  background-color: var(--btn-inactive-bg-hover);
+  color: var(--btn-inactive-text-hover);
+}
+
+.gh-segment[aria-pressed="true"] {
+  background-color: var(--btn-active-bg);
+  color: var(--btn-active-text);
+}
+
+.gh-segment[aria-pressed="true"]:hover {
+  background-color: var(--btn-active-bg);
+  color: var(--btn-active-text);
+}
+
+/* Ghost icon button: Dark mode toggle */
+.gh-btn-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.375rem;
+  border-radius: 0.375rem;
+  border: 1px solid transparent;
+  background-color: transparent;
+  color: var(--btn-icon-text);
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+  cursor: pointer;
+}
+
+.gh-btn-icon:hover {
+  background-color: var(--btn-icon-bg-hover);
+  border-color: var(--btn-icon-border-hover);
+}
+
+/* Header vertical divider */
+.gh-header-divider {
+  width: 1px;
+  height: 1.25rem;
+  margin-inline: 0.25rem;
+  background-color: var(--header-divider);
+}
+
+/* Save dropdown panel */
+.gh-dropdown {
+  position: absolute;
+  right: 0;
+  margin-top: 0.25rem;
+  width: 12rem;
+  border-radius: 0.375rem;
+  border: 1px solid var(--dropdown-border);
+  background-color: var(--dropdown-bg);
+  box-shadow: 0 8px 24px rgba(1, 4, 9, 0.25);
+  z-index: 10;
+  padding-block: 0.25rem;
+}
+
+/* Dropdown menu item */
+.gh-dropdown-item {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  text-align: left;
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  background-color: transparent;
+  color: var(--dropdown-text);
+  border: none;
+  transition: background-color 0.15s ease;
+  cursor: pointer;
+}
+
+.gh-dropdown-item:hover {
+  background-color: var(--dropdown-bg-hover);
+}
+
+/* =============================================
+   Tab bar
+   ============================================= */
+
+.gh-tab-bar {
+  background-color: var(--tab-bg);
+  border-bottom: 1px solid var(--canvas-border);
+}
+
+.gh-tab {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  padding: 0.375rem 0.75rem;
+  font-size: 0.75rem;
+  cursor: pointer;
+  border-right: 1px solid var(--canvas-border);
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  background-color: var(--tab-bg);
+  color: var(--tab-text);
+  transition: background-color 0.15s ease;
+}
+
+.gh-tab:hover {
+  background-color: var(--tab-hover-bg);
+}
+
+.gh-tab-active {
+  background-color: var(--tab-active-bg);
+  color: var(--tab-text-active);
+  border-bottom-color: var(--tab-active-border);
+}
+
+.gh-tab-close {
+  margin-left: 0.5rem;
+  width: 1rem;
+  height: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.25rem;
+  border: none;
+  background: transparent;
+  color: var(--tab-text);
+  opacity: 0;
+  cursor: pointer;
+  transition: opacity 0.15s ease, background-color 0.15s ease;
+}
+
+.gh-tab:hover .gh-tab-close,
+.gh-tab-active .gh-tab-close {
+  opacity: 1;
+}
+
+.gh-tab-close:hover {
+  background-color: var(--tab-close-hover);
+  color: #ffffff;
+}
+
+/* =============================================
+   Canvas & Panels
+   ============================================= */
+
+.gh-canvas {
+  background-color: var(--canvas-bg);
+  color: var(--canvas-text);
+}
+
+.gh-panel {
+  background-color: var(--canvas-bg);
+}
+
+/* Resize handle */
+.gh-resize-handle {
+  position: relative;
+  flex-shrink: 0;
+  width: 5px;
+  cursor: col-resize;
+  background-color: var(--resize-handle);
+  z-index: 10;
+}
+
+.gh-resize-highlight {
+  position: absolute;
+  inset: 0 -1px;
+  transition: background-color 0.15s ease;
+}
+
+.gh-resize-handle:hover .gh-resize-highlight,
+.gh-resize-active .gh-resize-highlight {
+  background-color: var(--resize-handle-active);
+}
+
+/* Drag overlay */
+.gh-drag-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  background-color: var(--drag-overlay);
+}
+
+.gh-drag-box {
+  border: 4px dashed var(--drag-accent);
+  border-radius: 1rem;
+  padding: 3rem;
+  text-align: center;
+  color: var(--drag-accent);
+}
+
+/* Editor textarea */
+.gh-editor {
+  background-color: var(--canvas-bg);
+  color: var(--canvas-text);
+}
+
+/* =============================================
+   Markdown Viewer / Preview
+   ============================================= */
+
+.gh-preview {
+  background-color: var(--canvas-bg);
+}
+
+.gh-preview-content {
+  background-color: var(--canvas-bg);
+  color: var(--canvas-text);
+}
+
+.gh-checkbox {
+  accent-color: var(--canvas-text-muted);
+  transform: scale(1.1);
+  vertical-align: middle;
+}
+
+.gh-code-header {
+  background-color: var(--canvas-subtle);
+  border-color: var(--canvas-border);
+  color: var(--canvas-text-muted);
+}
+
+.gh-code-block {
+  background-color: var(--canvas-subtle);
+  border-color: var(--canvas-border);
+  color: var(--canvas-text);
+}
+
+.gh-inline-code {
+  background-color: var(--btn-secondary-bg);
+  color: var(--canvas-text);
 }

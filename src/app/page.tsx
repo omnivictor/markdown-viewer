@@ -16,7 +16,6 @@ export default function Home() {
   const [isResizing, setIsResizing] = useState(false);
   const mainRef = useRef<HTMLElement>(null);
 
-  // File drag & drop (supports multiple files)
   const handleDrop = useCallback((e: React.DragEvent) => {
     e.preventDefault();
     setIsDragging(false);
@@ -26,22 +25,17 @@ export default function Home() {
     droppedFiles.forEach(async (file) => {
       if (!validateMarkdownFile(file)) return;
       if (file.size > 10 * 1024 * 1024) return;
-
       try {
         const content = await file.text();
-        const markdownFile: MarkdownFile = {
+        openFile({
           id: generateId(),
           name: file.name,
           content,
           size: file.size,
           lastModified: file.lastModified || Date.now(),
-        };
-        openFile(markdownFile);
-      } catch {
-        // skip failed files silently
-      }
+        });
+      } catch { /* skip */ }
     });
-
     setError(null);
   }, [openFile, setError]);
 
@@ -55,7 +49,6 @@ export default function Home() {
     setIsDragging(false);
   }, []);
 
-  // Panel resize
   const handleResizeStart = useCallback((e: React.MouseEvent) => {
     e.preventDefault();
     setIsResizing(true);
@@ -84,27 +77,14 @@ export default function Home() {
   return (
     <ThemeProvider>
       <div
-        className="h-screen flex flex-col relative"
-        style={{
-          backgroundColor: isDarkMode ? '#0d1117' : '#ffffff',
-          color: isDarkMode ? '#e6edf3' : '#1f2328'
-        }}
+        className="gh-canvas h-screen flex flex-col relative"
         onDrop={handleDrop}
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
       >
         {isDragging && (
-          <div
-            className="absolute inset-0 z-50 flex items-center justify-center pointer-events-none"
-            style={{ backgroundColor: isDarkMode ? 'rgba(13,17,23,0.9)' : 'rgba(255,255,255,0.85)' }}
-          >
-            <div
-              className="border-4 border-dashed rounded-2xl p-12 text-center"
-              style={{
-                borderColor: isDarkMode ? '#58a6ff' : '#2563eb',
-                color: isDarkMode ? '#58a6ff' : '#2563eb',
-              }}
-            >
+          <div className="gh-drag-overlay">
+            <div className="gh-drag-box">
               <svg className="w-16 h-16 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
               </svg>
@@ -129,46 +109,25 @@ export default function Home() {
         <main ref={mainRef} className="flex-1 flex min-h-0">
           {viewMode === 'edit' && (
             <>
-              <div
-                style={{
-                  width: `${splitRatio}%`,
-                  backgroundColor: isDarkMode ? '#0d1117' : '#ffffff',
-                }}
-              >
+              <div className="gh-panel" style={{ width: `${splitRatio}%` }}>
                 <MarkdownEditor />
               </div>
 
               <div
-                className="relative flex-shrink-0 z-10 group"
-                style={{
-                  width: '5px',
-                  cursor: 'col-resize',
-                  backgroundColor: isDarkMode ? '#30363d' : '#d0d7de',
-                }}
+                className={`gh-resize-handle group ${isResizing ? 'gh-resize-active' : ''}`}
                 onMouseDown={handleResizeStart}
               >
-                <div
-                  className="absolute inset-y-0 -left-1 -right-1 group-hover:bg-blue-500/30"
-                  style={{
-                    backgroundColor: isResizing ? (isDarkMode ? 'rgba(88,166,255,0.4)' : 'rgba(37,99,235,0.3)') : undefined,
-                  }}
-                />
+                <div className="gh-resize-highlight" />
               </div>
 
-              <div
-                className="flex-1 min-w-0"
-                style={{ backgroundColor: isDarkMode ? '#0d1117' : '#ffffff' }}
-              >
+              <div className="gh-panel flex-1 min-w-0">
                 <MarkdownViewer />
               </div>
             </>
           )}
 
           {viewMode === 'view' && (
-            <div
-              className="w-full"
-              style={{ backgroundColor: isDarkMode ? '#0d1117' : '#ffffff' }}
-            >
+            <div className="gh-panel w-full">
               <MarkdownViewer />
             </div>
           )}

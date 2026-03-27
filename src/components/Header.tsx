@@ -6,7 +6,7 @@ import { generateId, validateMarkdownFile, DEFAULT_CONTENT } from '@/lib/utils';
 import { MarkdownFile } from '@/types';
 
 export default function Header() {
-  const { isDarkMode, toggleDarkMode, setError, viewMode, setViewMode, openFile, clearFiles } = useStore();
+  const { isDarkMode, toggleDarkMode, setError, viewMode, setViewMode, openFile } = useStore();
   const activeFile = useStore(getActiveFile);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [showSaveDropdown, setShowSaveDropdown] = useState(false);
@@ -327,34 +327,16 @@ export default function Header() {
     });
   }, [openFile]);
 
-  const handleReset = useCallback(() => {
-    clearFiles();
-    setError(null);
-    openFile({
-      id: generateId(),
-      name: 'demo.md',
-      content: DEFAULT_CONTENT,
-      size: DEFAULT_CONTENT.length,
-      lastModified: Date.now(),
-    });
-  }, [clearFiles, openFile, setError]);
 
   return (
-    <header 
-      className="border-b transition-colors duration-300"
-      style={{
-        backgroundColor: isDarkMode ? '#161b22' : '#ffffff',
-        borderColor: isDarkMode ? '#30363d' : '#d0d7de',
-        color: isDarkMode ? '#e6edf3' : '#1f2328'
-      }}
-    >
+    <header className="gh-app-header border-b transition-colors duration-300">
       <div className="px-4 py-3 flex items-center justify-between">
         <div className="flex items-center space-x-4">
           <h1 className="text-xl font-bold">
             {viewMode === 'view' ? 'Markdown Viewer' : 'Markdown Editor'}
           </h1>
           {viewMode === 'edit' && (
-            <span className="text-xs" style={{ color: isDarkMode ? '#8b949e' : '#57606a' }}>
+            <span className="text-xs gh-char-count">
               {(activeFile?.content || DEFAULT_CONTENT).length} chars
             </span>
           )}
@@ -363,9 +345,11 @@ export default function Header() {
         <div className="flex items-center space-x-2">
           {viewMode === 'edit' && (
             <>
+              {/* New button */}
               <button
+                type="button"
                 onClick={handleNewFile}
-                className="inline-flex items-center px-3 py-1.5 text-sm bg-green-600 hover:bg-green-700 text-white rounded-md transition-colors"
+                className="gh-btn-secondary"
               >
                 <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
@@ -373,20 +357,11 @@ export default function Header() {
                 New
               </button>
 
+              {/* Open button */}
               <button
-                onClick={handleReset}
-                className="inline-flex items-center px-3 py-1.5 text-sm bg-purple-600 hover:bg-purple-700 text-white rounded-md transition-colors"
-                title="Reset to demo content"
-              >
-                <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-                </svg>
-                Reset
-              </button>
-
-              <button
+                type="button"
                 onClick={() => fileInputRef.current?.click()}
-                className="inline-flex items-center px-3 py-1.5 text-sm bg-blue-600 hover:bg-blue-700 text-white rounded-md transition-colors"
+                className="gh-btn-secondary"
               >
                 <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
@@ -394,56 +369,46 @@ export default function Header() {
                 Open
               </button>
 
+              {/* Save dropdown */}
               {activeFile && (
                 <div className="relative save-dropdown">
                   <button
+                    type="button"
                     onClick={() => setShowSaveDropdown(!showSaveDropdown)}
-                    className="inline-flex items-center px-3 py-1.5 text-sm bg-gray-600 hover:bg-gray-700 text-white rounded-md transition-colors"
+                    className="gh-btn-secondary"
                   >
                     <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                     </svg>
                     Save
-                    <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-3 h-3 ml-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                     </svg>
                   </button>
 
                   {showSaveDropdown && (
-                    <div
-                      className="absolute right-0 mt-2 w-48 rounded-md shadow-lg z-10"
-                      style={{
-                        backgroundColor: isDarkMode ? '#161b22' : '#ffffff',
-                        border: `1px solid ${isDarkMode ? '#30363d' : '#d0d7de'}`
-                      }}
-                    >
-                      <div className="py-1">
-                        <button
-                          onClick={handleSaveAsMarkdown}
-                          className="block w-full text-left px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors"
-                          style={{ color: isDarkMode ? '#e6edf3' : '#1f2328' }}
-                        >
-                          <div className="flex items-center">
-                            <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                            </svg>
-                            Markdown (.md)
-                          </div>
-                        </button>
+                    <div className="gh-dropdown">
+                      <button
+                        type="button"
+                        onClick={handleSaveAsMarkdown}
+                        className="gh-dropdown-item"
+                      >
+                        <svg className="w-4 h-4 mr-2 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                        </svg>
+                        Markdown (.md)
+                      </button>
 
-                        <button
-                          onClick={handleSaveAsHTML}
-                          className="block w-full text-left px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors"
-                          style={{ color: isDarkMode ? '#e6edf3' : '#1f2328' }}
-                        >
-                          <div className="flex items-center">
-                            <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
-                            </svg>
-                            HTML (.html)
-                          </div>
-                        </button>
-                      </div>
+                      <button
+                        type="button"
+                        onClick={handleSaveAsHTML}
+                        className="gh-dropdown-item"
+                      >
+                        <svg className="w-4 h-4 mr-2 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+                        </svg>
+                        HTML (.html)
+                      </button>
                     </div>
                   )}
                 </div>
@@ -451,22 +416,16 @@ export default function Header() {
             </>
           )}
 
-          <div className="border-l border-gray-300 dark:border-gray-600 h-6 mx-2"></div>
+          {/* Vertical divider */}
+          <div className="gh-header-divider" aria-hidden="true" />
 
-          {/* View/Edit mode toggle */}
-          <div
-            className="flex rounded-md overflow-hidden border"
-            style={{ borderColor: isDarkMode ? '#30363d' : '#d0d7de' }}
-          >
+          {/* View/Edit segmented control */}
+          <div className="gh-segmented" role="group" aria-label="View mode">
             <button
+              type="button"
               onClick={() => setViewMode('view')}
-              className="inline-flex items-center px-3 py-1.5 text-sm transition-colors"
-              style={{
-                backgroundColor: viewMode === 'view'
-                  ? (isDarkMode ? '#1f6feb' : '#2563eb')
-                  : (isDarkMode ? '#21262d' : '#f3f4f6'),
-                color: viewMode === 'view' ? '#ffffff' : (isDarkMode ? '#8b949e' : '#57606a'),
-              }}
+              className="gh-segment"
+              aria-pressed={viewMode === 'view' ? 'true' : 'false'}
             >
               <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -475,14 +434,10 @@ export default function Header() {
               View
             </button>
             <button
+              type="button"
               onClick={() => setViewMode('edit')}
-              className="inline-flex items-center px-3 py-1.5 text-sm transition-colors"
-              style={{
-                backgroundColor: viewMode === 'edit'
-                  ? (isDarkMode ? '#1f6feb' : '#2563eb')
-                  : (isDarkMode ? '#21262d' : '#f3f4f6'),
-                color: viewMode === 'edit' ? '#ffffff' : (isDarkMode ? '#8b949e' : '#57606a'),
-              }}
+              className="gh-segment"
+              aria-pressed={viewMode === 'edit' ? 'true' : 'false'}
             >
               <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
@@ -491,17 +446,19 @@ export default function Header() {
             </button>
           </div>
 
+          {/* Dark mode ghost icon button */}
           <button
+            type="button"
             onClick={toggleDarkMode}
-            className="p-1.5 rounded-md bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 transition-colors"
-            aria-label="Toggle dark mode"
+            className="gh-btn-icon"
+            aria-label={isDarkMode ? 'Switch to light mode' : 'Switch to dark mode'}
           >
             {isDarkMode ? (
-              <svg className="w-4 h-4 text-gray-600 dark:text-gray-300" fill="currentColor" viewBox="0 0 20 20">
+              <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                 <path fillRule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" clipRule="evenodd" />
               </svg>
             ) : (
-              <svg className="w-4 h-4 text-gray-600 dark:text-gray-300" fill="currentColor" viewBox="0 0 20 20">
+              <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                 <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z" />
               </svg>
             )}
