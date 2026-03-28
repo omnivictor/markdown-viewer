@@ -1,9 +1,9 @@
 'use client';
 
-import { useCallback, useState, useRef } from 'react';
+import { useCallback, useState, useRef, useEffect } from 'react';
 import { useStore } from '@/store/useStore';
 import { generateId, validateMarkdownFile } from '@/lib/utils';
-import { MarkdownFile } from '@/types';
+
 import Header from '@/components/Header';
 import TabBar from '@/components/TabBar';
 import MarkdownEditor from '@/components/MarkdownEditor';
@@ -11,8 +11,46 @@ import MarkdownViewer from '@/components/MarkdownViewer';
 import ThemeProvider from '@/components/ThemeProvider';
 
 export default function Home() {
-  const { error, isDarkMode, viewMode, splitRatio, setSplitRatio, openFile, setError } = useStore();
+  const { error, isDarkMode, viewMode, splitRatio, setSplitRatio, openFile, setError, clearFiles } = useStore();
   const [isDragging, setIsDragging] = useState(false);
+
+  // Clear file data from localStorage when browser tab/window is closed (not on refresh)
+  useEffect(() => {
+    // Mark this session as active on every load
+    sessionStorage.setItem('md-viewer-active', '1');
+
+    const handleBeforeUnload = () => {
+      // sessionStorage persists across refresh but is cleared on tab close.
+      // On refresh, the flag is set again immediately above.
+      // On tab close, sessionStorage is wiped, so next load won't find the flag.
+      // We use a small trick: set a "closing" flag in sessionStorage,
+      // then on next load check if it was a refresh (flag exists) or close (flag gone).
+      sessionStorage.setItem('md-viewer-closing', '1');
+    };
+
+    // Check if this is a fresh open (not a refresh)
+    const wasClosing = sessionStorage.getItem('md-viewer-closing');
+    if (!wasClosing) {
+      // Fresh browser open — clear any leftover file data
+      const stored = localStorage.getItem('markdown-viewer-storage');
+      if (stored) {
+        try {
+          const parsed = JSON.parse(stored);
+          if (parsed.state) {
+            parsed.state.files = [];
+            parsed.state.activeFileId = null;
+            localStorage.setItem('markdown-viewer-storage', JSON.stringify(parsed));
+            clearFiles();
+          }
+        } catch { /* ignore */ }
+      }
+    }
+    // Clear the closing flag (refresh will re-set it via beforeunload)
+    sessionStorage.removeItem('md-viewer-closing');
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    return () => window.removeEventListener('beforeunload', handleBeforeUnload);
+  }, [clearFiles]);
   const [isResizing, setIsResizing] = useState(false);
   const mainRef = useRef<HTMLElement>(null);
 
