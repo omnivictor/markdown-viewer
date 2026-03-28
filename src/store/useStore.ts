@@ -13,6 +13,7 @@ interface StoreState extends AppState {
   setActiveFile: (id: string) => void;
   updateFileContent: (id: string, content: string) => void;
   clearFiles: () => void;
+  reorderFiles: (fromIndex: number, toIndex: number) => void;
 
   // Settings actions
   setTheme: (theme: Theme) => void;
@@ -76,6 +77,14 @@ export const useStore = create<StoreState>()(
       },
 
       clearFiles: () => set({ files: [], activeFileId: null }),
+
+      reorderFiles: (fromIndex, toIndex) => {
+        const { files } = get();
+        const updated = [...files];
+        const [moved] = updated.splice(fromIndex, 1);
+        updated.splice(toIndex, 0, moved);
+        set({ files: updated });
+      },
 
       setTheme: (theme) => set({ theme }),
       setViewMode: (mode) => set({ viewMode: mode }),
