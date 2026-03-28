@@ -91,6 +91,8 @@ export const useStore = create<StoreState>()(
         isDarkMode: state.isDarkMode,
         viewMode: state.viewMode,
         splitRatio: state.splitRatio,
+        files: state.files,
+        activeFileId: state.activeFileId,
       }),
     }
   )
