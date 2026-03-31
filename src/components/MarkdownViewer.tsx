@@ -87,10 +87,10 @@ export default function MarkdownViewer() {
               ),
 
               ol: ({ children, ...props }) => (
-                <ol className="list-decimal list-inside space-y-2 mb-4 pl-6" style={{ color: v.text }} {...props}>{children}</ol>
+                <ol className="mb-4" style={{ color: v.text }} {...props}>{children}</ol>
               ),
               ul: ({ children, ...props }) => (
-                <ul className="space-y-2 mb-4 pl-6" style={{ color: v.text }} {...props}>{children}</ul>
+                <ul className="mb-4" style={{ color: v.text }} {...props}>{children}</ul>
               ),
 
               code: ({ inline, className, children }: CodeProps) => {
