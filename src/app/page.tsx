@@ -154,8 +154,8 @@ export default function Home() {
               <p className="text-lg font-medium mb-2">No files open</p>
               <p className="text-sm opacity-50 mb-4">Drop a markdown file here, or use the buttons above</p>
               <div className="text-xs opacity-40 space-y-1">
-                <p>Ctrl+N &mdash; New file</p>
-                <p>Ctrl+O &mdash; Open file</p>
+                <p>Alt+N &mdash; New file</p>
+                <p>Alt+O &mdash; Open file</p>
               </div>
             </div>
           )}

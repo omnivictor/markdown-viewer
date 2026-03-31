@@ -14,18 +14,23 @@ export default function Header() {
   // Keyboard shortcuts
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      const mod = e.ctrlKey || e.metaKey;
-      if (!mod) return;
-
-      if (e.key === 's') {
+      // Ctrl+S: Save
+      if ((e.ctrlKey || e.metaKey) && e.key === 's') {
         e.preventDefault();
         if (activeFile) handleDownload();
-      } else if (e.key === 'n') {
+        return;
+      }
+      // Alt+N: New file
+      if (e.altKey && e.key === 'n') {
         e.preventDefault();
         handleNewFile();
-      } else if (e.key === 'o') {
+        return;
+      }
+      // Alt+O: Open file
+      if (e.altKey && e.key === 'o') {
         e.preventDefault();
         fileInputRef.current?.click();
+        return;
       }
     };
 
