@@ -58,14 +58,21 @@ export default function MarkdownEditor() {
   const editorRef = useRef<HTMLDivElement>(null);
   const viewRef = useRef<EditorView | null>(null);
   const isExternalUpdate = useRef(false);
+  const activeFileRef = useRef(activeFile);
 
   const content = activeFile?.content ?? '';
+
+  // Keep ref in sync so the editor callback always has the latest activeFile
+  useEffect(() => {
+    activeFileRef.current = activeFile;
+  }, [activeFile]);
 
   const handleChange = useCallback((update: { state: EditorState; docChanged: boolean }) => {
     if (!update.docChanged || isExternalUpdate.current) return;
     const newContent = update.state.doc.toString();
-    if (activeFile) {
-      updateFileContent(activeFile.id, newContent);
+    const file = activeFileRef.current;
+    if (file) {
+      updateFileContent(file.id, newContent);
     } else {
       openFile({
         id: generateId(),
@@ -75,7 +82,7 @@ export default function MarkdownEditor() {
         lastModified: Date.now(),
       });
     }
-  }, [activeFile, updateFileContent, openFile]);
+  }, [updateFileContent, openFile]);
 
   // Create editor
   useEffect(() => {
