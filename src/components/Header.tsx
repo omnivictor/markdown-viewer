@@ -359,7 +359,13 @@ ${htmlContent}
 
                   <button
                     type="button"
-                    onClick={() => { window.print(); setShowSaveDropdown(false); }}
+                    onClick={() => {
+                      const originalTitle = document.title;
+                      if (activeFile) document.title = activeFile.name.replace(/\.[^.]+$/, '');
+                      window.print();
+                      document.title = originalTitle;
+                      setShowSaveDropdown(false);
+                    }}
                     className="gh-dropdown-item"
                   >
                     <svg className="w-4 h-4 mr-2 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
