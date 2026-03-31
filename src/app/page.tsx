@@ -80,7 +80,10 @@ export default function Home() {
 
   const handleDragOver = useCallback((e: React.DragEvent) => {
     e.preventDefault();
-    setIsDragging(true);
+    // Only show drop overlay for external file drags, not internal tab drags
+    if (e.dataTransfer.types.includes('Files')) {
+      setIsDragging(true);
+    }
   }, []);
 
   const handleDragLeave = useCallback((e: React.DragEvent) => {
