@@ -413,6 +413,9 @@ html.light #root {
 .gh-preview-content {
   background-color: var(--canvas-bg);
   color: var(--canvas-text);
+  max-width: 52rem;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 
 .gh-checkbox {
@@ -431,6 +434,9 @@ html.light #root {
   background-color: var(--canvas-subtle);
   border-color: var(--canvas-border);
   color: var(--canvas-text);
+  white-space: pre;
+  word-wrap: normal;
+  overflow-x: auto;
 }
 
 .gh-inline-code {
