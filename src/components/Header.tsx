@@ -2,7 +2,7 @@
 
 import { useCallback, useRef, useState, useEffect } from 'react';
 import { useStore, getActiveFile } from '@/store/useStore';
-import { generateId, validateMarkdownFile, DEFAULT_CONTENT } from '@/lib/utils';
+import { generateId, validateMarkdownFile, DEFAULT_CONTENT, MAX_FILE_SIZE } from '@/lib/utils';
 import { MarkdownFile } from '@/types';
 
 export default function Header() {
@@ -10,6 +10,28 @@ export default function Header() {
   const activeFile = useStore(getActiveFile);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [showSaveDropdown, setShowSaveDropdown] = useState(false);
+
+  // Keyboard shortcuts
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      const mod = e.ctrlKey || e.metaKey;
+      if (!mod) return;
+
+      if (e.key === 's') {
+        e.preventDefault();
+        if (activeFile) handleDownload();
+      } else if (e.key === 'n') {
+        e.preventDefault();
+        handleNewFile();
+      } else if (e.key === 'o') {
+        e.preventDefault();
+        fileInputRef.current?.click();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [activeFile]);
 
   // 드롭다운 외부 클릭시 닫기
   useEffect(() => {
@@ -35,7 +57,7 @@ export default function Header() {
       return;
     }
 
-    if (file.size > 10 * 1024 * 1024) {
+    if (file.size > MAX_FILE_SIZE) {
       setError('File size must be less than 10MB');
       return;
     }
@@ -335,11 +357,16 @@ export default function Header() {
           <h1 className="text-xl font-bold">
             {viewMode === 'view' ? 'Markdown Viewer' : 'Markdown Editor'}
           </h1>
-          {viewMode === 'edit' && (
-            <span className="text-xs gh-char-count">
-              {(activeFile?.content || DEFAULT_CONTENT).length} chars
-            </span>
-          )}
+          {(() => {
+            const text = activeFile?.content || DEFAULT_CONTENT;
+            const words = text.trim().split(/\s+/).filter(Boolean).length;
+            const readMin = Math.max(1, Math.ceil(words / 200));
+            return (
+              <span className="text-xs gh-char-count">
+                {text.length} chars &middot; {words} words &middot; {readMin} min read
+              </span>
+            );
+          })()}
         </div>
         
         <div className="flex items-center space-x-2">

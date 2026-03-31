@@ -9,7 +9,8 @@ import rehypeRaw from 'rehype-raw';
 import rehypeSlug from 'rehype-slug';
 import { useStore, getActiveFile } from '@/store/useStore';
 import { DEFAULT_CONTENT } from '@/lib/utils';
-import { useEffect, useRef, type ComponentProps } from 'react';
+import rehypeAutolinkHeadings from 'rehype-autolink-headings';
+import { useState, useEffect, useRef, type ComponentProps } from 'react';
 
 type CodeProps = ComponentProps<'code'> & { inline?: boolean };
 
@@ -26,6 +27,7 @@ const v = {
 export default function MarkdownViewer() {
   const activeFile = useStore(getActiveFile);
   const previewRef = useRef<HTMLDivElement>(null);
+  const [copiedBlock, setCopiedBlock] = useState<string | null>(null);
   const content = activeFile?.content || DEFAULT_CONTENT;
 
   useEffect(() => {
@@ -42,7 +44,7 @@ export default function MarkdownViewer() {
 
   const handlePreviewScroll = (e: React.UIEvent<HTMLDivElement>) => {
     const preview = e.currentTarget;
-    const scrollPercentage = preview.scrollTop / (preview.scrollHeight - preview.clientHeight);
+    const scrollPercentage = preview.scrollTop / ((preview.scrollHeight - preview.clientHeight) || 1);
     window.dispatchEvent(new CustomEvent('preview-scroll', { detail: { scrollPercentage } }));
   };
 
@@ -56,7 +58,7 @@ export default function MarkdownViewer() {
         <div className="gh-preview-content prose max-w-none p-6 prose-headings:scroll-mt-16 text-sm leading-relaxed">
           <ReactMarkdown
             remarkPlugins={[remarkGfm, remarkEmoji, remarkBreaks]}
-            rehypePlugins={[rehypeRaw, rehypeHighlight, rehypeSlug]}
+            rehypePlugins={[rehypeRaw, rehypeHighlight, rehypeSlug, [rehypeAutolinkHeadings, { behavior: 'wrap' }]]}
             components={{
               li: ({ children, className, ...props }) => {
                 const stringChildren = children?.toString() || '';
@@ -104,11 +106,16 @@ export default function MarkdownViewer() {
                     </pre>
                     <button
                       type="button"
-                      onClick={() => navigator.clipboard.writeText(String(children))}
+                      onClick={() => {
+                        const text = String(children);
+                        navigator.clipboard.writeText(text);
+                        setCopiedBlock(text);
+                        setTimeout(() => setCopiedBlock(null), 2000);
+                      }}
                       className="gh-btn-secondary absolute top-8 right-2 !px-2 !py-0.5 text-xs"
                       title="Copy code"
                     >
-                      Copy
+                      {copiedBlock === String(children) ? 'Copied!' : 'Copy'}
                     </button>
                   </div>
                 ) : (
@@ -131,7 +138,7 @@ export default function MarkdownViewer() {
                 <tbody className="divide-y" style={{ backgroundColor: v.bg, borderColor: v.border }} {...props}>{children}</tbody>
               ),
               td: ({ children, ...props }) => (
-                <td className="px-6 py-4 whitespace-nowrap text-sm" style={{ color: v.text }} {...props}>{children}</td>
+                <td className="px-6 py-4 text-sm" style={{ color: v.text }} {...props}>{children}</td>
               ),
 
               blockquote: ({ children, ...props }) => (

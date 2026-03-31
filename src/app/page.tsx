@@ -2,7 +2,7 @@
 
 import { useCallback, useState, useRef, useEffect } from 'react';
 import { useStore } from '@/store/useStore';
-import { generateId, validateMarkdownFile } from '@/lib/utils';
+import { generateId, validateMarkdownFile, MAX_FILE_SIZE } from '@/lib/utils';
 
 import Header from '@/components/Header';
 import TabBar from '@/components/TabBar';
@@ -62,7 +62,7 @@ export default function Home() {
 
     droppedFiles.forEach(async (file) => {
       if (!validateMarkdownFile(file)) return;
-      if (file.size > 10 * 1024 * 1024) return;
+      if (file.size > MAX_FILE_SIZE) return;
       try {
         const content = await file.text();
         openFile({

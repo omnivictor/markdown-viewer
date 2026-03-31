@@ -1,9 +1,21 @@
 import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
-import { AppState, MarkdownFile, Theme, ViewMode } from '@/types';
+import { persist, createJSONStorage } from 'zustand/middleware';
+import { AppState, MarkdownFile, ViewMode } from '@/types';
+
+// Debounced localStorage to avoid excessive writes during typing
+const DEBOUNCE_MS = 500;
+let writeTimer: ReturnType<typeof setTimeout> | null = null;
+
+const debouncedStorage = createJSONStorage(() => ({
+  getItem: (name: string) => localStorage.getItem(name),
+  setItem: (name: string, value: string) => {
+    if (writeTimer) clearTimeout(writeTimer);
+    writeTimer = setTimeout(() => localStorage.setItem(name, value), DEBOUNCE_MS);
+  },
+  removeItem: (name: string) => localStorage.removeItem(name),
+}));
 
 interface StoreState extends AppState {
-  theme: Theme;
   viewMode: ViewMode;
   splitRatio: number;
 
@@ -16,10 +28,8 @@ interface StoreState extends AppState {
   reorderFiles: (fromIndex: number, toIndex: number) => void;
 
   // Settings actions
-  setTheme: (theme: Theme) => void;
   setViewMode: (mode: ViewMode) => void;
   setSplitRatio: (ratio: number) => void;
-  setLoading: (loading: boolean) => void;
   setError: (error: string | null) => void;
   toggleDarkMode: () => void;
 }
@@ -32,7 +42,6 @@ export const useStore = create<StoreState>()(
       isDarkMode: true,
       isLoading: false,
       error: null,
-      theme: 'system',
       viewMode: 'edit',
       splitRatio: 50,
 
@@ -86,17 +95,15 @@ export const useStore = create<StoreState>()(
         set({ files: updated });
       },
 
-      setTheme: (theme) => set({ theme }),
       setViewMode: (mode) => set({ viewMode: mode }),
       setSplitRatio: (ratio) => set({ splitRatio: Math.min(80, Math.max(20, ratio)) }),
-      setLoading: (isLoading) => set({ isLoading }),
       setError: (error) => set({ error }),
       toggleDarkMode: () => set((state) => ({ isDarkMode: !state.isDarkMode })),
     }),
     {
       name: 'markdown-viewer-storage',
+      storage: debouncedStorage,
       partialize: (state) => ({
-        theme: state.theme,
         isDarkMode: state.isDarkMode,
         viewMode: state.viewMode,
         splitRatio: state.splitRatio,

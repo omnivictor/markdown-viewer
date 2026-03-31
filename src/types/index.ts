@@ -14,5 +14,5 @@ export interface AppState {
   error: string | null;
 }
 
-export type Theme = 'light' | 'dark' | 'system';
+
 export type ViewMode = 'view' | 'edit';

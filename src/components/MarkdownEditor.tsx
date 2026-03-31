@@ -26,7 +26,7 @@ export default function MarkdownEditor() {
 
   const handleScroll = useCallback((e: React.UIEvent<HTMLTextAreaElement>) => {
     const textarea = e.currentTarget;
-    const scrollPercentage = textarea.scrollTop / (textarea.scrollHeight - textarea.clientHeight);
+    const scrollPercentage = textarea.scrollTop / ((textarea.scrollHeight - textarea.clientHeight) || 1);
     window.dispatchEvent(new CustomEvent('editor-scroll', {
       detail: { scrollPercentage }
     }));
