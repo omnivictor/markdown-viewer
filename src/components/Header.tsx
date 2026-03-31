@@ -271,8 +271,8 @@ ${htmlContent}
           <h1 className="text-xl font-bold">
             {viewMode === 'view' ? 'Markdown Viewer' : 'Markdown Editor'}
           </h1>
-          {(() => {
-            const text = activeFile?.content || DEFAULT_CONTENT;
+          {activeFile && (() => {
+            const text = activeFile.content;
             const words = text.trim().split(/\s+/).filter(Boolean).length;
             const readMin = Math.max(1, Math.ceil(words / 200));
             return (
