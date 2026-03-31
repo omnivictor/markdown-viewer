@@ -407,77 +407,18 @@ html.light #root {
   color: var(--drag-accent);
 }
 
-/* Search bar */
-.gh-search-bar {
-  padding: 0.25rem 0.5rem;
-  background-color: var(--canvas-subtle);
-  border-bottom: 1px solid var(--canvas-border);
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
+
+/* CodeMirror editor */
+.gh-codemirror {
+  overflow: hidden;
 }
 
-.gh-search-row {
-  display: flex;
-  align-items: center;
-  gap: 0.25rem;
+.gh-codemirror .cm-editor {
+  height: 100%;
 }
 
-.gh-search-input {
-  flex: 1;
-  padding: 0.25rem 0.5rem;
-  font-size: 0.8125rem;
-  background-color: var(--canvas-bg);
-  color: var(--canvas-text);
-  border: 1px solid var(--canvas-border);
-  border-radius: 0.25rem;
-  outline: none;
-}
-
-.gh-search-input:focus {
-  border-color: var(--canvas-link);
-}
-
-.gh-search-count {
-  font-size: 0.6875rem;
-  color: var(--canvas-text-muted);
-  min-width: 3rem;
-  text-align: center;
-}
-
-/* Editor toolbar */
-.gh-editor-toolbar {
-  display: flex;
-  gap: 2px;
-  padding: 0.25rem 0.5rem;
-  background-color: var(--canvas-subtle);
-  border-bottom: 1px solid var(--canvas-border);
-}
-
-.gh-toolbar-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 1.75rem;
-  height: 1.75rem;
-  border: none;
-  border-radius: 0.25rem;
-  background: transparent;
-  color: var(--canvas-text-muted);
-  font-size: 0.8125rem;
-  cursor: pointer;
-  transition: background-color 0.15s ease, color 0.15s ease;
-}
-
-.gh-toolbar-btn:hover {
-  background-color: var(--btn-secondary-bg);
-  color: var(--canvas-text);
-}
-
-/* Editor textarea */
-.gh-editor {
-  background-color: var(--canvas-bg);
-  color: var(--canvas-text);
+.gh-codemirror .cm-scroller {
+  overflow: auto;
 }
 
 /* =============================================
