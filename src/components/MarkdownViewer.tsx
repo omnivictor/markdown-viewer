@@ -9,7 +9,6 @@ import rehypeRaw from 'rehype-raw';
 import rehypeSlug from 'rehype-slug';
 import { useStore, getActiveFile } from '@/store/useStore';
 import { DEFAULT_CONTENT } from '@/lib/utils';
-import rehypeAutolinkHeadings from 'rehype-autolink-headings';
 import { useState, useEffect, useRef, type ComponentProps } from 'react';
 
 type CodeProps = ComponentProps<'code'> & { inline?: boolean };
@@ -58,7 +57,7 @@ export default function MarkdownViewer() {
         <div className="gh-preview-content prose p-6 mx-auto prose-headings:scroll-mt-16 text-sm leading-relaxed">
           <ReactMarkdown
             remarkPlugins={[remarkGfm, remarkEmoji, remarkBreaks]}
-            rehypePlugins={[rehypeRaw, rehypeHighlight, rehypeSlug, [rehypeAutolinkHeadings, { behavior: 'wrap' }]]}
+            rehypePlugins={[rehypeRaw, rehypeHighlight, rehypeSlug]}
             components={{
               li: ({ children, className, ...props }) => {
                 const stringChildren = children?.toString() || '';
