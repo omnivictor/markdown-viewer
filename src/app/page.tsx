@@ -148,11 +148,11 @@ export default function Home() {
         <main ref={mainRef} className="flex-1 flex min-h-0">
           {files.length === 0 && (
             <div className="gh-empty-state">
-              <svg className="w-20 h-20 mx-auto mb-6 opacity-20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+              <svg className="w-32 h-32 mx-auto mb-8 opacity-15" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
               </svg>
-              <p className="text-lg font-medium mb-2">Drop markdown files here</p>
-              <p className="text-sm opacity-40">.md, .markdown, .txt</p>
+              <p className="text-2xl font-medium mb-3">Drop markdown files here</p>
+              <p className="text-base opacity-40">.md, .markdown, .txt</p>
             </div>
           )}
 
