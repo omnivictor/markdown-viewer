@@ -124,21 +124,21 @@ export default function MarkdownViewer() {
               },
 
               table: ({ children, ...props }) => (
-                <div className="overflow-x-auto my-6 rounded-md border" style={{ borderColor: v.border }}>
-                  <table className="w-full divide-y" style={{ borderColor: v.border, backgroundColor: v.bg, tableLayout: 'auto' }} {...props}>{children}</table>
+                <div className="overflow-x-auto my-4" >
+                  <table className="gh-table w-full" {...props}>{children}</table>
                 </div>
               ),
               thead: ({ children, ...props }) => (
-                <thead style={{ backgroundColor: v.bgSubtle }} {...props}>{children}</thead>
+                <thead className="gh-table-head" {...props}>{children}</thead>
               ),
               th: ({ children, ...props }) => (
-                <th className="px-4 py-3 text-left text-xs font-semibold" style={{ color: v.text, whiteSpace: 'nowrap' }} {...props}>{children}</th>
+                <th className="gh-table-th" {...props}>{children}</th>
               ),
               tbody: ({ children, ...props }) => (
-                <tbody className="divide-y" style={{ backgroundColor: v.bg, borderColor: v.border }} {...props}>{children}</tbody>
+                <tbody className="gh-table-body" {...props}>{children}</tbody>
               ),
               td: ({ children, ...props }) => (
-                <td className="px-4 py-3 text-sm" style={{ color: v.text, wordBreak: 'break-word' }} {...props}>{children}</td>
+                <td className="gh-table-td" {...props}>{children}</td>
               ),
 
               blockquote: ({ children, ...props }) => (

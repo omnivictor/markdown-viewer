@@ -443,3 +443,35 @@ html.light #root {
   background-color: var(--btn-secondary-bg);
   color: var(--canvas-text);
 }
+
+/* Table */
+.gh-table {
+  border-collapse: collapse;
+  border: 1px solid var(--canvas-border);
+}
+
+.gh-table-head {
+  background-color: var(--canvas-subtle);
+}
+
+.gh-table-th {
+  padding: 0.5rem 0.75rem;
+  text-align: left;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--canvas-text);
+  border: 1px solid var(--canvas-border);
+  white-space: nowrap;
+}
+
+.gh-table-body {
+  background-color: var(--canvas-bg);
+}
+
+.gh-table-td {
+  padding: 0.4rem 0.75rem;
+  font-size: 0.8125rem;
+  color: var(--canvas-text);
+  border: 1px solid var(--canvas-border);
+  word-break: break-word;
+}
