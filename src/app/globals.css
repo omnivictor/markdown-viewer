@@ -413,7 +413,7 @@ html.light #root {
 .gh-preview-content {
   background-color: var(--canvas-bg);
   color: var(--canvas-text);
-  max-width: 52rem;
+  max-width: none;
   word-wrap: break-word;
   overflow-wrap: break-word;
 }
