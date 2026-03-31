@@ -8,7 +8,7 @@ import Header from '@/components/Header';
 import TabBar from '@/components/TabBar';
 import MarkdownEditor from '@/components/MarkdownEditor';
 import MarkdownViewer from '@/components/MarkdownViewer';
-import TableOfContents from '@/components/TableOfContents';
+
 import ThemeProvider from '@/components/ThemeProvider';
 
 export default function Home() {
@@ -176,12 +176,9 @@ export default function Home() {
           )}
 
           {files.length > 0 && viewMode === 'view' && (
-            <>
-              <div className="gh-panel flex-1 min-w-0">
-                <MarkdownViewer />
-              </div>
-              <TableOfContents />
-            </>
+            <div className="gh-panel w-full">
+              <MarkdownViewer />
+            </div>
           )}
         </main>
       </div>
