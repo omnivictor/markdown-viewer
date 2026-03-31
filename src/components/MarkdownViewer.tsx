@@ -125,7 +125,7 @@ export default function MarkdownViewer() {
 
               table: ({ children, ...props }) => (
                 <div className="overflow-x-auto my-4" >
-                  <table className="gh-table w-full" {...props}>{children}</table>
+                  <table className="gh-table" {...props}>{children}</table>
                 </div>
               ),
               thead: ({ children, ...props }) => (
