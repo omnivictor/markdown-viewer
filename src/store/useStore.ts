@@ -26,6 +26,7 @@ interface StoreState extends AppState {
   updateFileContent: (id: string, content: string) => void;
   clearFiles: () => void;
   reorderFiles: (fromIndex: number, toIndex: number) => void;
+  renameFile: (id: string, name: string) => void;
 
   // Settings actions
   setViewMode: (mode: ViewMode) => void;
@@ -93,6 +94,11 @@ export const useStore = create<StoreState>()(
         const [moved] = updated.splice(fromIndex, 1);
         updated.splice(toIndex, 0, moved);
         set({ files: updated });
+      },
+
+      renameFile: (id, name) => {
+        const { files } = get();
+        set({ files: files.map(f => f.id === id ? { ...f, name } : f) });
       },
 
       setViewMode: (mode) => set({ viewMode: mode }),

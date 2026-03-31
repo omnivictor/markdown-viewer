@@ -342,6 +342,17 @@ html.light #root {
   color: #ffffff;
 }
 
+.gh-tab-rename {
+  background: transparent;
+  border: 1px solid var(--tab-active-border);
+  color: var(--tab-text-active);
+  font-size: 0.75rem;
+  padding: 0 0.25rem;
+  width: 120px;
+  outline: none;
+  border-radius: 2px;
+}
+
 /* =============================================
    Canvas & Panels
    ============================================= */
@@ -394,6 +405,73 @@ html.light #root {
   padding: 3rem;
   text-align: center;
   color: var(--drag-accent);
+}
+
+/* Search bar */
+.gh-search-bar {
+  padding: 0.25rem 0.5rem;
+  background-color: var(--canvas-subtle);
+  border-bottom: 1px solid var(--canvas-border);
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.gh-search-row {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.gh-search-input {
+  flex: 1;
+  padding: 0.25rem 0.5rem;
+  font-size: 0.8125rem;
+  background-color: var(--canvas-bg);
+  color: var(--canvas-text);
+  border: 1px solid var(--canvas-border);
+  border-radius: 0.25rem;
+  outline: none;
+}
+
+.gh-search-input:focus {
+  border-color: var(--canvas-link);
+}
+
+.gh-search-count {
+  font-size: 0.6875rem;
+  color: var(--canvas-text-muted);
+  min-width: 3rem;
+  text-align: center;
+}
+
+/* Editor toolbar */
+.gh-editor-toolbar {
+  display: flex;
+  gap: 2px;
+  padding: 0.25rem 0.5rem;
+  background-color: var(--canvas-subtle);
+  border-bottom: 1px solid var(--canvas-border);
+}
+
+.gh-toolbar-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  border: none;
+  border-radius: 0.25rem;
+  background: transparent;
+  color: var(--canvas-text-muted);
+  font-size: 0.8125rem;
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.gh-toolbar-btn:hover {
+  background-color: var(--btn-secondary-bg);
+  color: var(--canvas-text);
 }
 
 /* Editor textarea */
@@ -497,4 +575,137 @@ html.light #root {
   color: var(--canvas-text);
   border: 1px solid var(--canvas-border);
   word-break: break-word;
+}
+
+/* =============================================
+   Table of Contents
+   ============================================= */
+
+.gh-toc {
+  width: 220px;
+  flex-shrink: 0;
+  border-left: 1px solid var(--canvas-border);
+  background-color: var(--canvas-bg);
+  overflow-y: auto;
+  font-size: 0.75rem;
+}
+
+.gh-toc-toggle {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  border: none;
+  background: var(--canvas-subtle);
+  color: var(--canvas-text-muted);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  border-bottom: 1px solid var(--canvas-border);
+}
+
+.gh-toc-toggle:hover {
+  color: var(--canvas-text);
+}
+
+.gh-toc-nav {
+  display: flex;
+  flex-direction: column;
+}
+
+.gh-toc-item {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 0.3rem 0.5rem;
+  border: none;
+  background: transparent;
+  color: var(--canvas-text-muted);
+  font-size: 0.75rem;
+  cursor: pointer;
+  transition: color 0.15s ease, background-color 0.15s ease;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.gh-toc-item:hover {
+  color: var(--canvas-text);
+  background-color: var(--canvas-subtle);
+}
+
+/* Empty state */
+.gh-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  color: var(--canvas-text-muted);
+}
+
+/* =============================================
+   Mobile responsive
+   ============================================= */
+
+@media (max-width: 640px) {
+  .gh-app-header .px-4 {
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+  }
+
+  .gh-btn-secondary span,
+  .gh-segment span {
+    display: none;
+  }
+
+  .gh-btn-secondary svg + span,
+  .gh-segment svg + span {
+    display: none;
+  }
+
+  .gh-toc {
+    display: none;
+  }
+
+  .gh-resize-handle {
+    display: none;
+  }
+
+  .gh-char-count {
+    display: none;
+  }
+}
+
+/* =============================================
+   Print
+   ============================================= */
+
+@media print {
+  .gh-app-header,
+  .gh-tab-bar,
+  .gh-resize-handle,
+  .gh-drag-overlay,
+  .gh-editor {
+    display: none !important;
+  }
+
+  .gh-canvas {
+    height: auto !important;
+  }
+
+  .gh-panel {
+    width: 100% !important;
+  }
+
+  .gh-preview {
+    overflow: visible !important;
+  }
+
+  .gh-preview-content {
+    padding: 0 !important;
+  }
 }

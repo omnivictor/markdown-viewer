@@ -143,147 +143,44 @@ export default function Header() {
 
   const handleSaveAsHTML = useCallback(async () => {
     if (!activeFile) return;
-    
-    // 현재 미리보기 영역의 HTML을 가져오기
+
     const previewElement = document.querySelector('.prose');
     if (!previewElement) return;
-    
-    // HTML 내용을 가져와서 체크박스를 표준 HTML로 변환
-    let htmlContent = previewElement.innerHTML;
-    
-    // 커스텀 체크박스를 표준 HTML 체크박스로 변환
-    htmlContent = htmlContent.replace(
-      /<div class="relative inline-block w-4 h-4 mr-2 mt-1">[\s\S]*?<\/div>/g,
-      (match) => {
-        const isChecked = match.includes('stroke="currentColor"');
-        return `<input type="checkbox" ${isChecked ? 'checked' : ''} disabled style="margin-right: 8px; transform: scale(1.2);">`;
-      }
-    );
-    
-    const fullHtmlContent = `
-<!DOCTYPE html>
+
+    const htmlContent = previewElement.innerHTML;
+
+    const fullHtmlContent = `<!DOCTYPE html>
 <html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>${activeFile.name}</title>
-    <style>
-        body { 
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif; 
-            line-height: 1.6; 
-            max-width: 800px; 
-            margin: 0 auto; 
-            padding: 20px; 
-            color: #333;
-        }
-        h1 { 
-            border-bottom: 2px solid #eee; 
-            padding-bottom: 10px; 
-            font-size: 24px;
-            margin-bottom: 16px;
-        }
-        h2 { 
-            border-bottom: 1px solid #eee; 
-            padding-bottom: 5px; 
-            font-size: 20px;
-            margin-top: 24px;
-            margin-bottom: 12px;
-        }
-        h3 { 
-            font-size: 18px;
-            margin-top: 16px;
-            margin-bottom: 8px;
-        }
-        p {
-            margin-bottom: 16px;
-        }
-        code { 
-            background: #f4f4f4; 
-            padding: 2px 6px; 
-            border-radius: 3px; 
-            font-family: 'Monaco', 'Consolas', monospace;
-            font-size: 14px;
-        }
-        pre { 
-            background: #f8f8f8; 
-            padding: 16px; 
-            border-radius: 6px; 
-            overflow-x: auto; 
-            border: 1px solid #e1e4e8;
-        }
-        pre code {
-            background: none;
-            padding: 0;
-        }
-        blockquote { 
-            border-left: 4px solid #0066cc; 
-            margin: 16px 0; 
-            padding-left: 16px; 
-            color: #666; 
-            font-style: italic;
-            background: #f0f8ff;
-            padding: 12px 16px;
-            border-radius: 0 4px 4px 0;
-        }
-        table { 
-            border-collapse: collapse; 
-            width: 100%; 
-            margin: 16px 0;
-            border: 1px solid #ddd;
-            border-radius: 6px;
-            overflow: hidden;
-        }
-        th, td { 
-            border: 1px solid #ddd; 
-            padding: 12px; 
-            text-align: left; 
-        }
-        th { 
-            background-color: #f8f9fa; 
-            font-weight: 600;
-            color: #333;
-        }
-        tr:nth-child(even) {
-            background-color: #f9f9f9;
-        }
-        ul, ol {
-            margin: 16px 0;
-            padding-left: 24px;
-        }
-        li {
-            margin: 4px 0;
-            line-height: 1.5;
-        }
-        a {
-            color: #0066cc;
-            text-decoration: none;
-        }
-        a:hover {
-            text-decoration: underline;
-        }
-        hr {
-            border: none;
-            height: 2px;
-            background: #eee;
-            margin: 24px 0;
-        }
-        /* 체크박스 스타일 */
-        input[type="checkbox"] {
-            margin-right: 8px;
-            transform: scale(1.2);
-            accent-color: #6b7280;
-        }
-        strong {
-            font-weight: 600;
-        }
-        em {
-            font-style: italic;
-            color: #666;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>${activeFile.name}</title>
+<style>
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif; line-height: 1.6; max-width: 980px; margin: 0 auto; padding: 2rem; color: #1f2328; font-size: 14px; }
+  h1 { font-size: 2em; font-weight: 600; border-bottom: 1px solid #d0d7de; padding-bottom: 0.3em; margin-top: 1.5em; margin-bottom: 1em; }
+  h2 { font-size: 1.5em; font-weight: 600; border-bottom: 1px solid #d0d7de; padding-bottom: 0.3em; margin-top: 1.5em; margin-bottom: 0.75em; }
+  h3 { font-size: 1.25em; font-weight: 600; margin-top: 1.5em; margin-bottom: 0.5em; }
+  p { margin-bottom: 1em; }
+  code { background: rgba(175,184,193,0.2); padding: 0.2em 0.4em; border-radius: 3px; font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 85%; }
+  pre { background: #f6f8fa; padding: 1rem; border-radius: 6px; overflow-x: auto; border: 1px solid #d0d7de; }
+  pre code { background: none; padding: 0; font-size: 85%; }
+  blockquote { border-left: 4px solid #d0d7de; margin: 1em 0; padding: 0 1em; color: #57606a; }
+  table { border-collapse: collapse; margin: 1em 0; }
+  th, td { border: 1px solid #d0d7de; padding: 0.4rem 0.75rem; text-align: left; font-size: 13px; }
+  th { background: #f6f8fa; font-weight: 600; }
+  ul, ol { margin: 1em 0; padding-left: 1.5rem; }
+  ul { list-style-type: disc; }
+  ul ul { list-style-type: circle; }
+  li { margin: 0.25em 0; }
+  a { color: #0969da; text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  hr { border: none; height: 1px; background: #d0d7de; margin: 1.5em 0; }
+  input[type="checkbox"] { margin-right: 0.5em; }
+  img { max-width: 100%; }
+</style>
 </head>
 <body>
-    ${htmlContent}
+${htmlContent}
 </body>
 </html>`;
     
@@ -433,6 +330,17 @@ export default function Header() {
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
                     </svg>
                     HTML (.html)
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => { window.print(); setShowSaveDropdown(false); }}
+                    className="gh-dropdown-item"
+                  >
+                    <svg className="w-4 h-4 mr-2 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
+                    </svg>
+                    Print / PDF
                   </button>
                 </div>
               )}
