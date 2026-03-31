@@ -147,7 +147,19 @@ export default function Header() {
     const previewElement = document.querySelector('.prose');
     if (!previewElement) return;
 
-    const htmlContent = previewElement.innerHTML;
+    // Clone and sanitize the preview HTML
+    const clone = previewElement.cloneNode(true) as HTMLElement;
+
+    // Remove all style attributes (they contain var() references)
+    clone.querySelectorAll('[style]').forEach(el => el.removeAttribute('style'));
+    // Remove all class attributes (Tailwind/app-specific classes)
+    clone.querySelectorAll('[class]').forEach(el => el.removeAttribute('class'));
+    // Remove node="[object Object]" and other React artifacts
+    clone.querySelectorAll('[node]').forEach(el => el.removeAttribute('node'));
+    // Remove copy buttons from code blocks
+    clone.querySelectorAll('button').forEach(el => el.remove());
+
+    const htmlContent = clone.innerHTML;
 
     const fullHtmlContent = `<!DOCTYPE html>
 <html lang="ko">
