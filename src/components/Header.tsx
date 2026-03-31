@@ -163,6 +163,13 @@ export default function Header() {
     clone.querySelectorAll('[node]').forEach(el => el.removeAttribute('node'));
     // Remove copy buttons from code blocks
     clone.querySelectorAll('button').forEach(el => el.remove());
+    // Wrap tables in scrollable div
+    clone.querySelectorAll('table').forEach(table => {
+      const wrapper = document.createElement('div');
+      wrapper.className = 'table-wrap';
+      table.parentNode?.insertBefore(wrapper, table);
+      wrapper.appendChild(table);
+    });
 
     const htmlContent = clone.innerHTML;
 
@@ -182,7 +189,8 @@ export default function Header() {
   pre { background: #f6f8fa; padding: 1rem; border-radius: 6px; overflow-x: auto; border: 1px solid #d0d7de; }
   pre code { background: none; padding: 0; font-size: 85%; }
   blockquote { border-left: 4px solid #d0d7de; margin: 1em 0; padding: 0 1em; color: #57606a; }
-  table { border-collapse: collapse; margin: 1em 0; display: block; overflow-x: auto; max-width: 100%; }
+  table { border-collapse: collapse; margin: 1em 0; width: auto; }
+  .table-wrap { overflow-x: auto; margin: 1em 0; }
   th, td { border: 1px solid #d0d7de; padding: 0.4rem 0.75rem; text-align: left; font-size: 13px; }
   th { background: #f6f8fa; font-weight: 600; }
   ul, ol { margin: 1em 0; padding-left: 1.5rem; }
