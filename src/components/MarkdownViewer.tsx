@@ -8,7 +8,7 @@ import rehypeHighlight from 'rehype-highlight';
 import rehypeRaw from 'rehype-raw';
 import rehypeSlug from 'rehype-slug';
 import { useStore, getActiveFile } from '@/store/useStore';
-import { DEFAULT_CONTENT } from '@/lib/utils';
+
 import { useState, useEffect, useRef, type ComponentProps } from 'react';
 
 type CodeProps = ComponentProps<'code'> & { inline?: boolean };
@@ -27,7 +27,7 @@ export default function MarkdownViewer() {
   const activeFile = useStore(getActiveFile);
   const previewRef = useRef<HTMLDivElement>(null);
   const [copiedBlock, setCopiedBlock] = useState<string | null>(null);
-  const content = activeFile?.content || DEFAULT_CONTENT;
+  const content = activeFile?.content || '';
 
   useEffect(() => {
     const handleEditorScroll = (e: CustomEvent) => {

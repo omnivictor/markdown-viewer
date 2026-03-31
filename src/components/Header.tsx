@@ -2,7 +2,7 @@
 
 import { useCallback, useRef, useState, useEffect } from 'react';
 import { useStore, getActiveFile } from '@/store/useStore';
-import { generateId, validateMarkdownFile, DEFAULT_CONTENT, MAX_FILE_SIZE } from '@/lib/utils';
+import { generateId, validateMarkdownFile, MAX_FILE_SIZE } from '@/lib/utils';
 import { MarkdownFile } from '@/types';
 
 export default function Header() {

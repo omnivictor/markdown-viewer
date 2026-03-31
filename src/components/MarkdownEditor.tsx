@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useCallback } from 'react';
 import { useStore, getActiveFile } from '@/store/useStore';
-import { DEFAULT_CONTENT, generateId } from '@/lib/utils';
+import { generateId } from '@/lib/utils';
 import { EditorView, keymap, lineNumbers, highlightActiveLine, highlightActiveLineGutter } from '@codemirror/view';
 import { EditorState, Compartment } from '@codemirror/state';
 import { markdown, markdownLanguage } from '@codemirror/lang-markdown';
@@ -59,7 +59,7 @@ export default function MarkdownEditor() {
   const viewRef = useRef<EditorView | null>(null);
   const isExternalUpdate = useRef(false);
 
-  const content = activeFile?.content ?? DEFAULT_CONTENT;
+  const content = activeFile?.content ?? '';
 
   const handleChange = useCallback((update: { state: EditorState; docChanged: boolean }) => {
     if (!update.docChanged || isExternalUpdate.current) return;

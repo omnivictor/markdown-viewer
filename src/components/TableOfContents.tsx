@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useStore, getActiveFile } from '@/store/useStore';
-import { DEFAULT_CONTENT } from '@/lib/utils';
+
 
 interface TocItem {
   id: string;
@@ -15,7 +15,7 @@ export default function TableOfContents() {
   const [items, setItems] = useState<TocItem[]>([]);
   const [isOpen, setIsOpen] = useState(true);
 
-  const content = activeFile?.content || DEFAULT_CONTENT;
+  const content = activeFile?.content || '';
 
   useEffect(() => {
     const headingRegex = /^(#{1,3})\s+(.+)$/gm;
