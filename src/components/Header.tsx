@@ -309,7 +309,7 @@ ${htmlContent}
           </button>
 
           {/* Save dropdown — edit mode only */}
-          {viewMode === 'edit' && activeFile && (
+          {activeFile && (
             <div className="relative save-dropdown">
               <button
                 type="button"

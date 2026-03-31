@@ -630,7 +630,12 @@ html.light #root {
   .gh-tab-bar,
   .gh-resize-handle,
   .gh-drag-overlay,
-  .gh-editor {
+  .gh-codemirror {
+    display: none !important;
+  }
+
+  /* Hide the editor panel (first panel in split view) */
+  .gh-panel:first-child:not(:last-child) {
     display: none !important;
   }
 
@@ -640,10 +645,16 @@ html.light #root {
 
   .gh-panel {
     width: 100% !important;
+    flex: 1 !important;
   }
 
   .gh-preview {
     overflow: visible !important;
+    height: auto !important;
+  }
+
+  .gh-preview-content {
+    padding: 0 !important;
   }
 
   .gh-preview-content {
