@@ -651,13 +651,67 @@ html.light #root {
   .gh-preview {
     overflow: visible !important;
     height: auto !important;
+    background: #ffffff !important;
   }
 
   .gh-preview-content {
     padding: 0 !important;
+    background: #ffffff !important;
+    color: #1f2328 !important;
   }
 
-  .gh-preview-content {
-    padding: 0 !important;
+  /* Force light mode colors for print */
+  .gh-preview-content h1,
+  .gh-preview-content h2,
+  .gh-preview-content h3,
+  .gh-preview-content p,
+  .gh-preview-content li,
+  .gh-preview-content td,
+  .gh-preview-content th,
+  .gh-preview-content strong,
+  .gh-preview-content em,
+  .gh-preview-content span {
+    color: #1f2328 !important;
+  }
+
+  .gh-preview-content a {
+    color: #0969da !important;
+  }
+
+  .gh-preview-content blockquote {
+    color: #57606a !important;
+    border-color: #d0d7de !important;
+  }
+
+  .gh-preview-content h1,
+  .gh-preview-content h2 {
+    border-color: #d0d7de !important;
+  }
+
+  .gh-preview-content code {
+    background: rgba(175,184,193,0.2) !important;
+    color: #1f2328 !important;
+  }
+
+  .gh-code-header,
+  .gh-code-block {
+    background: #f6f8fa !important;
+    border-color: #d0d7de !important;
+    color: #1f2328 !important;
+  }
+
+  .gh-table {
+    border-color: #d0d7de !important;
+  }
+
+  .gh-table th {
+    background: #f6f8fa !important;
+    color: #1f2328 !important;
+    border-color: #d0d7de !important;
+  }
+
+  .gh-table td {
+    color: #1f2328 !important;
+    border-color: #d0d7de !important;
   }
 }
