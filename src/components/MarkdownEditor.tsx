@@ -127,26 +127,30 @@ export default function MarkdownEditor() {
     }
   }, [content]);
 
-  // Scroll sync: editor → preview
+  // Scroll sync: editor → preview (only for active file)
   useEffect(() => {
     const view = viewRef.current;
     if (!view) return;
 
     const handleScroll = () => {
+      const file = activeFileRef.current;
+      if (!file) return;
       const scrollInfo = view.scrollDOM;
       const scrollPercentage = scrollInfo.scrollTop / ((scrollInfo.scrollHeight - scrollInfo.clientHeight) || 1);
-      window.dispatchEvent(new CustomEvent('editor-scroll', { detail: { scrollPercentage } }));
+      window.dispatchEvent(new CustomEvent('editor-scroll', { detail: { scrollPercentage, fileId: file.id } }));
     };
 
     view.scrollDOM.addEventListener('scroll', handleScroll);
     return () => view.scrollDOM.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Scroll sync: preview → editor
+  // Scroll sync: preview → editor (only for active file)
   useEffect(() => {
     const handlePreviewScroll = (e: CustomEvent) => {
       const view = viewRef.current;
-      if (!view) return;
+      const file = activeFileRef.current;
+      if (!view || !file) return;
+      if (e.detail.fileId !== file.id) return;
       const { scrollPercentage } = e.detail;
       const scrollDOM = view.scrollDOM;
       scrollDOM.scrollTop = scrollPercentage * ((scrollDOM.scrollHeight - scrollDOM.clientHeight) || 1);

@@ -31,20 +31,21 @@ export default function MarkdownViewer() {
 
   useEffect(() => {
     const handleEditorScroll = (e: CustomEvent) => {
-      if (previewRef.current) {
-        const { scrollPercentage } = e.detail;
-        const preview = previewRef.current;
-        preview.scrollTop = scrollPercentage * (preview.scrollHeight - preview.clientHeight);
-      }
+      if (!previewRef.current || !activeFile) return;
+      if (e.detail.fileId !== activeFile.id) return;
+      const { scrollPercentage } = e.detail;
+      const preview = previewRef.current;
+      preview.scrollTop = scrollPercentage * ((preview.scrollHeight - preview.clientHeight) || 1);
     };
     window.addEventListener('editor-scroll', handleEditorScroll as EventListener);
     return () => window.removeEventListener('editor-scroll', handleEditorScroll as EventListener);
-  }, []);
+  }, [activeFile]);
 
   const handlePreviewScroll = (e: React.UIEvent<HTMLDivElement>) => {
+    if (!activeFile) return;
     const preview = e.currentTarget;
     const scrollPercentage = preview.scrollTop / ((preview.scrollHeight - preview.clientHeight) || 1);
-    window.dispatchEvent(new CustomEvent('preview-scroll', { detail: { scrollPercentage } }));
+    window.dispatchEvent(new CustomEvent('preview-scroll', { detail: { scrollPercentage, fileId: activeFile.id } }));
   };
 
   return (
