@@ -59,6 +59,8 @@ export default function MarkdownEditor() {
   const viewRef = useRef<EditorView | null>(null);
   const isExternalUpdate = useRef(false);
   const activeFileRef = useRef(activeFile);
+  const scrollPositions = useRef<Record<string, number>>({});
+  const prevFileId = useRef<string | null>(null);
 
   const content = activeFile?.content ?? '';
 
@@ -66,6 +68,21 @@ export default function MarkdownEditor() {
   useEffect(() => {
     activeFileRef.current = activeFile;
   }, [activeFile]);
+
+  // Save/restore editor scroll position per tab
+  useEffect(() => {
+    const view = viewRef.current;
+    if (!view) return;
+
+    // Save previous tab's scroll position
+    if (prevFileId.current && prevFileId.current !== activeFile?.id) {
+      scrollPositions.current[prevFileId.current] = view.scrollDOM.scrollTop;
+    }
+
+    // Restore current tab's scroll position (or reset to top)
+    view.scrollDOM.scrollTop = activeFile?.id ? (scrollPositions.current[activeFile.id] ?? 0) : 0;
+    prevFileId.current = activeFile?.id ?? null;
+  }, [activeFile?.id]);
 
   const handleChange = useCallback((update: { state: EditorState; docChanged: boolean }) => {
     if (!update.docChanged || isExternalUpdate.current) return;

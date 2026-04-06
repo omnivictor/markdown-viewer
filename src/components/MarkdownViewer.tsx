@@ -26,8 +26,25 @@ const v = {
 export default function MarkdownViewer() {
   const activeFile = useStore(getActiveFile);
   const previewRef = useRef<HTMLDivElement>(null);
+  const scrollPositions = useRef<Record<string, number>>({});
+  const prevFileId = useRef<string | null>(null);
   const [copiedBlock, setCopiedBlock] = useState<string | null>(null);
   const content = activeFile?.content || '';
+
+  // Save/restore scroll position per tab
+  useEffect(() => {
+    const preview = previewRef.current;
+    if (!preview) return;
+
+    // Save previous tab's scroll position
+    if (prevFileId.current && prevFileId.current !== activeFile?.id) {
+      scrollPositions.current[prevFileId.current] = preview.scrollTop;
+    }
+
+    // Restore current tab's scroll position (or reset to top)
+    preview.scrollTop = activeFile?.id ? (scrollPositions.current[activeFile.id] ?? 0) : 0;
+    prevFileId.current = activeFile?.id ?? null;
+  }, [activeFile?.id]);
 
   useEffect(() => {
     const handleEditorScroll = (e: CustomEvent) => {
