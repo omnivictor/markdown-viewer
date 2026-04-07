@@ -2,7 +2,7 @@
 
 import { useCallback, useRef, useState, useEffect } from 'react';
 import { useStore, getActiveFile } from '@/store/useStore';
-import { generateId, validateMarkdownFile, MAX_FILE_SIZE } from '@/lib/utils';
+import { generateId, validateMarkdownFile, MAX_FILE_SIZE, saveFile, escapeHtml } from '@/lib/utils';
 import { MarkdownFile } from '@/types';
 
 export default function Header() {
@@ -92,53 +92,7 @@ export default function Header() {
 
   const handleDownload = useCallback(async () => {
     if (!activeFile) return;
-    
-    try {
-      // 최신 브라우저에서 File System Access API 지원 확인
-      if ('showSaveFilePicker' in window) {
-        const fileHandle = await (window as unknown as any).showSaveFilePicker({
-          suggestedName: activeFile.name,
-          types: [
-            {
-              description: 'Markdown files',
-              accept: {
-                'text/markdown': ['.md'],
-                'text/plain': ['.md']
-              }
-            }
-          ]
-        });
-        
-        const writable = await fileHandle.createWritable();
-        await writable.write(activeFile.content);
-        await writable.close();
-      } else {
-        // 기존 방식 (File System Access API 미지원 브라우저)
-        const blob = new Blob([activeFile.content], { type: 'text/markdown' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = activeFile.name;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url);
-      }
-    } catch (error) {
-      if ((error as Error).name !== 'AbortError') {
-        console.error('파일 저장 오류:', error);
-        // 오류 발생 시 기존 방식으로 폴백
-        const blob = new Blob([activeFile.content], { type: 'text/markdown' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = activeFile.name;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url);
-      }
-    }
+    await saveFile(activeFile.content, activeFile.name, 'text/markdown');
   }, [activeFile]);
 
   const handleSaveAsMarkdown = useCallback(() => {
@@ -149,7 +103,7 @@ export default function Header() {
   const handleSaveAsHTML = useCallback(async () => {
     if (!activeFile) return;
 
-    const previewElement = document.querySelector('.prose');
+    const previewElement = document.querySelector('.gh-preview-content');
     if (!previewElement) return;
 
     // Clone and sanitize the preview HTML
@@ -178,7 +132,7 @@ export default function Header() {
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>${activeFile.name}</title>
+<title>${escapeHtml(activeFile.name)}</title>
 <style>
   body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif; line-height: 1.6; max-width: 980px; margin: 0 auto; padding: 2rem; color: #1f2328; font-size: 14px; }
   h1 { font-size: 2em; font-weight: 600; border-bottom: 1px solid #d0d7de; padding-bottom: 0.3em; margin-top: 1.5em; margin-bottom: 1em; }
@@ -209,53 +163,7 @@ ${htmlContent}
 </body>
 </html>`;
     
-    try {
-      // 최신 브라우저에서 File System Access API 지원 확인
-      if ('showSaveFilePicker' in window) {
-        const fileHandle = await (window as unknown as any).showSaveFilePicker({
-          suggestedName: activeFile.name.replace(/\.md$/, '.html'),
-          types: [
-            {
-              description: 'HTML files',
-              accept: {
-                'text/html': ['.html'],
-                'text/plain': ['.html']
-              }
-            }
-          ]
-        });
-        
-        const writable = await fileHandle.createWritable();
-        await writable.write(fullHtmlContent);
-        await writable.close();
-      } else {
-        // 기존 방식 (File System Access API 미지원 브라우저)
-        const blob = new Blob([fullHtmlContent], { type: 'text/html; charset=utf-8' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = activeFile.name.replace(/\.md$/, '.html');
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url);
-      }
-    } catch (error) {
-      if ((error as Error).name !== 'AbortError') {
-        console.error('HTML 파일 저장 오류:', error);
-        // 오류 발생 시 기존 방식으로 폴백
-        const blob = new Blob([fullHtmlContent], { type: 'text/html; charset=utf-8' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = activeFile.name.replace(/\.md$/, '.html');
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url);
-      }
-    }
-    
+    await saveFile(fullHtmlContent, activeFile.name.replace(/\.md$/, '.html'), 'text/html');
     setShowSaveDropdown(false);
   }, [activeFile]);
 

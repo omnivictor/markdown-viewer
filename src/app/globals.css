@@ -299,10 +299,10 @@ body {
 }
 
 .gh-tab-active {
-  background-color: var(--tab-active-bg);
+  background-color: var(--canvas-bg);
   color: var(--tab-text-active);
   border: 1px solid var(--canvas-border);
-  border-bottom-color: var(--tab-active-bg);
+  border-bottom-color: var(--canvas-bg);
   margin-bottom: -1px;
 }
 
