@@ -277,7 +277,18 @@ body {
   background-color: var(--tab-bg);
   padding: 0.375rem 0.5rem 0;
   gap: 0.25rem;
-  border-bottom: 1px solid var(--canvas-border);
+  position: relative;
+}
+
+.gh-tab-bar::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background-color: var(--canvas-border);
+  z-index: 0;
 }
 
 .gh-tab {
@@ -302,9 +313,19 @@ body {
   background-color: var(--canvas-bg);
   color: var(--tab-text-active);
   border: 1px solid var(--canvas-border);
-  border-bottom: 2px solid var(--canvas-bg);
-  margin-bottom: -2px;
-  padding-bottom: calc(0.375rem + 1px);
+  border-bottom-color: transparent;
+  position: relative;
+  z-index: 1;
+}
+
+.gh-tab-active::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background-color: var(--canvas-bg);
 }
 
 .gh-tab-close {
