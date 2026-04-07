@@ -292,6 +292,7 @@ html.light #root {
   background-color: var(--tab-bg);
   padding: 0.375rem 0.5rem 0;
   gap: 0.25rem;
+  border-bottom: 1px solid var(--canvas-border);
 }
 
 .gh-tab {
@@ -315,6 +316,8 @@ html.light #root {
 .gh-tab-active {
   background-color: var(--tab-active-bg);
   color: var(--tab-text-active);
+  margin-bottom: -1px;
+  border-bottom: 1px solid var(--tab-active-bg);
 }
 
 .gh-tab-close {
