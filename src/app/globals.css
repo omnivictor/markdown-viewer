@@ -121,21 +121,6 @@ body {
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-html.dark,
-html.dark body,
-html.dark #__next,
-html.dark #root {
-  background-color: #0d1117 !important;
-  color: #e6edf3 !important;
-}
-
-html.light,
-html.light body,
-html.light #__next,
-html.light #root {
-  background-color: #ffffff !important;
-  color: #1f2328 !important;
-}
 
 ::selection {
   background-color: #58a6ff;
@@ -316,14 +301,15 @@ html.light #root {
 .gh-tab-active {
   background-color: var(--tab-active-bg);
   color: var(--tab-text-active);
+  border: 1px solid var(--canvas-border);
+  border-bottom-color: var(--tab-active-bg);
   margin-bottom: -1px;
-  border-bottom: 1px solid var(--tab-active-bg);
 }
 
 .gh-tab-close {
   margin-left: 0.5rem;
-  width: 1rem;
-  height: 1rem;
+  width: 1.25rem;
+  height: 1.25rem;
   display: flex;
   align-items: center;
   justify-content: center;

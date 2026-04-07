@@ -32,7 +32,7 @@ const ghDarkTheme = EditorView.theme({
   '.cm-tooltip': { backgroundColor: 'var(--canvas-subtle)', border: '1px solid var(--canvas-border)' },
 }, { dark: true });
 
-const ghHighlightStyle = HighlightStyle.define([
+const ghDarkHighlight = HighlightStyle.define([
   { tag: tags.heading1, fontWeight: 'bold', fontSize: '1.5em', color: '#e6edf3' },
   { tag: tags.heading2, fontWeight: 'bold', fontSize: '1.3em', color: '#e6edf3' },
   { tag: tags.heading3, fontWeight: 'bold', fontSize: '1.1em', color: '#e6edf3' },
@@ -50,10 +50,28 @@ const ghHighlightStyle = HighlightStyle.define([
   { tag: tags.meta, color: '#8b949e' },
 ]);
 
+const ghLightHighlight = HighlightStyle.define([
+  { tag: tags.heading1, fontWeight: 'bold', fontSize: '1.5em', color: '#1f2328' },
+  { tag: tags.heading2, fontWeight: 'bold', fontSize: '1.3em', color: '#1f2328' },
+  { tag: tags.heading3, fontWeight: 'bold', fontSize: '1.1em', color: '#1f2328' },
+  { tag: tags.strong, fontWeight: 'bold', color: '#1f2328' },
+  { tag: tags.emphasis, fontStyle: 'italic', color: '#1f2328' },
+  { tag: tags.strikethrough, textDecoration: 'line-through', color: '#57606a' },
+  { tag: tags.link, color: '#0969da', textDecoration: 'underline' },
+  { tag: tags.url, color: '#0969da' },
+  { tag: tags.monospace, color: '#0550ae', fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace' },
+  { tag: tags.quote, color: '#57606a', fontStyle: 'italic' },
+  { tag: tags.keyword, color: '#cf222e' },
+  { tag: tags.string, color: '#0a3069' },
+  { tag: tags.comment, color: '#6e7781' },
+  { tag: tags.processingInstruction, color: '#6e7781' },
+  { tag: tags.meta, color: '#6e7781' },
+]);
+
 const themeCompartment = new Compartment();
 
 export default function MarkdownEditor() {
-  const { openFile, updateFileContent } = useStore();
+  const { openFile, updateFileContent, isDarkMode } = useStore();
   const activeFile = useStore(getActiveFile);
   const editorRef = useRef<HTMLDivElement>(null);
   const viewRef = useRef<EditorView | null>(null);
@@ -68,6 +86,16 @@ export default function MarkdownEditor() {
   useEffect(() => {
     activeFileRef.current = activeFile;
   }, [activeFile]);
+
+  // Switch highlight style when dark/light mode changes
+  useEffect(() => {
+    const view = viewRef.current;
+    if (!view) return;
+    const highlight = isDarkMode ? ghDarkHighlight : ghLightHighlight;
+    view.dispatch({
+      effects: themeCompartment.reconfigure([ghDarkTheme, syntaxHighlighting(highlight)]),
+    });
+  }, [isDarkMode]);
 
   // Save/restore editor scroll position per tab
   useEffect(() => {
@@ -114,7 +142,7 @@ export default function MarkdownEditor() {
         history(),
         highlightSelectionMatches(),
         markdown({ base: markdownLanguage, codeLanguages: languages }),
-        themeCompartment.of([ghDarkTheme, syntaxHighlighting(ghHighlightStyle)]),
+        themeCompartment.of([ghDarkTheme, syntaxHighlighting(ghDarkHighlight)]),
         keymap.of([...defaultKeymap, ...historyKeymap, ...searchKeymap, indentWithTab]),
         EditorView.updateListener.of((update) => handleChange(update)),
         EditorView.lineWrapping,

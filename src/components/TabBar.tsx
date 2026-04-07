@@ -81,10 +81,9 @@ export default function TabBar() {
             className={`gh-tab group ${isActive ? 'gh-tab-active' : ''}`}
             style={{
               opacity: isDragged ? 0.4 : 1,
-              borderLeftWidth: isDropTarget && dragIndex !== null && dragIndex > index ? '2px' : undefined,
-              borderRightWidth: isDropTarget && dragIndex !== null && dragIndex < index ? '2px' : undefined,
-              borderLeftColor: isDropTarget && dragIndex !== null && dragIndex > index ? 'var(--tab-active-border)' : undefined,
-              borderRightColor: isDropTarget && dragIndex !== null && dragIndex < index ? 'var(--tab-active-border)' : undefined,
+              boxShadow: isDropTarget && dragIndex !== null
+                ? (dragIndex > index ? 'inset 3px 0 0 var(--tab-active-border)' : 'inset -3px 0 0 var(--tab-active-border)')
+                : undefined,
             }}
             draggable={!isEditing}
             onDragStart={(e) => handleDragStart(e, index)}

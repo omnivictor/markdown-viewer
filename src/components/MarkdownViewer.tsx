@@ -72,7 +72,7 @@ export default function MarkdownViewer() {
         className="gh-preview flex-1 overflow-y-auto"
         onScroll={handlePreviewScroll}
       >
-        <div className="gh-preview-content prose p-6 mx-auto prose-headings:scroll-mt-16 text-sm leading-relaxed">
+        <div className="gh-preview-content p-6 text-sm leading-relaxed">
           <ReactMarkdown
             remarkPlugins={[remarkGfm, remarkEmoji, remarkBreaks]}
             rehypePlugins={[rehypeRaw, rehypeHighlight, rehypeSlug]}
