@@ -138,8 +138,7 @@ body {
 
 /* App header bar */
 .gh-app-header {
-  background-color: var(--header-bg);
-  border-color: var(--btn-secondary-border);
+  background-color: var(--canvas-subtle);
   color: var(--foreground);
 }
 

@@ -181,7 +181,7 @@ ${htmlContent}
 
 
   return (
-    <header className="gh-app-header border-b transition-colors duration-300">
+    <header className="gh-app-header transition-colors duration-300">
       <div className="px-4 py-3 flex items-center justify-between">
         <div className="flex items-center space-x-4">
           <h1 className="text-xl font-bold">
