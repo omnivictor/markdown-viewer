@@ -299,8 +299,10 @@ body {
   font-size: 0.75rem;
   cursor: pointer;
   border-radius: 0.5rem 0.5rem 0 0;
-  background-color: transparent;
+  background-color: var(--tab-bg);
   color: var(--tab-text);
+  border: 1px solid transparent;
+  border-bottom: none;
   transition: background-color 0.15s ease, color 0.15s ease;
 }
 
