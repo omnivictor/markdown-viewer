@@ -70,12 +70,12 @@ html.dark {
   --canvas-link: #58a6ff;
 
   /* Tab bar */
-  --tab-bg: #010409;
+  --tab-bg: #161b22;
   --tab-active-bg: #0d1117;
   --tab-active-border: #58a6ff;
-  --tab-text: #8b949e;
+  --tab-text: #484f58;
   --tab-text-active: #e6edf3;
-  --tab-hover-bg: #161b22;
+  --tab-hover-bg: #1c2128;
   --tab-close-hover: #da3633;
 
   /* Resize handle */
