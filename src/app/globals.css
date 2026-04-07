@@ -37,12 +37,12 @@
   --canvas-link: #0969da;
 
   /* Tab bar */
-  --tab-bg: #f6f8fa;
+  --tab-bg: #eaeef2;
   --tab-active-bg: #ffffff;
   --tab-active-border: #0969da;
   --tab-text: #57606a;
   --tab-text-active: #1f2328;
-  --tab-hover-bg: #eaeef2;
+  --tab-hover-bg: #d0d7de;
   --tab-close-hover: #cf222e;
 
   /* Resize handle */
