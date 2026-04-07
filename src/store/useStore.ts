@@ -24,6 +24,7 @@ interface StoreState extends AppState {
   closeFile: (id: string) => void;
   setActiveFile: (id: string) => void;
   updateFileContent: (id: string, content: string) => void;
+  markFileSaved: (id: string) => void;
   clearFiles: () => void;
   reorderFiles: (fromIndex: number, toIndex: number) => void;
   renameFile: (id: string, name: string) => void;
@@ -48,11 +49,23 @@ export const useStore = create<StoreState>()(
 
       openFile: (file) => {
         const { files } = get();
-        const existing = files.find(f => f.id === file.id);
-        if (existing) {
+        const existingById = files.find(f => f.id === file.id);
+        const existingByName = files.find(f => f.name === file.name);
+        if (existingById) {
           set({ activeFileId: file.id, error: null });
+        } else if (existingByName) {
+          // Update content and activate existing tab instead of opening a duplicate
+          set({
+            files: files.map(f =>
+              f.name === file.name
+                ? { ...f, content: file.content, size: file.size, lastModified: file.lastModified, isDirty: false }
+                : f
+            ),
+            activeFileId: existingByName.id,
+            error: null,
+          });
         } else {
-          set({ files: [...files, file], activeFileId: file.id, error: null });
+          set({ files: [...files, { ...file, isDirty: false }], activeFileId: file.id, error: null });
         }
       },
 
@@ -81,8 +94,15 @@ export const useStore = create<StoreState>()(
         const { files } = get();
         set({
           files: files.map(f =>
-            f.id === id ? { ...f, content, size: content.length, lastModified: Date.now() } : f
+            f.id === id ? { ...f, content, size: content.length, lastModified: Date.now(), isDirty: true } : f
           ),
+        });
+      },
+
+      markFileSaved: (id) => {
+        const { files } = get();
+        set({
+          files: files.map(f => f.id === id ? { ...f, isDirty: false } : f),
         });
       },
 

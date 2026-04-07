@@ -4,6 +4,7 @@ export interface MarkdownFile {
   content: string;
   size: number;
   lastModified: number;
+  isDirty?: boolean;
 }
 
 export interface AppState {

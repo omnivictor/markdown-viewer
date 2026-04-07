@@ -105,7 +105,10 @@ export default function TabBar() {
                 onClick={(e) => e.stopPropagation()}
               />
             ) : (
-              <span className="max-w-[140px] truncate select-none">{file.name}</span>
+              <>
+                <span className="max-w-[140px] truncate select-none">{file.name}</span>
+                {file.isDirty && <span className="gh-tab-dirty">●</span>}
+              </>
             )}
             {!isEditing && (
               <button
@@ -113,6 +116,7 @@ export default function TabBar() {
                 className="gh-tab-close"
                 onClick={(e) => {
                   e.stopPropagation();
+                  if (file.isDirty && !window.confirm(`"${file.name}" has unsaved changes. Close anyway?`)) return;
                   closeFile(file.id);
                 }}
                 title="Close"

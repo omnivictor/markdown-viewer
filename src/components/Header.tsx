@@ -6,7 +6,7 @@ import { generateId, validateMarkdownFile, MAX_FILE_SIZE, saveFile, escapeHtml }
 import { MarkdownFile } from '@/types';
 
 export default function Header() {
-  const { isDarkMode, toggleDarkMode, setError, viewMode, setViewMode, openFile } = useStore();
+  const { isDarkMode, toggleDarkMode, setError, viewMode, setViewMode, openFile, markFileSaved } = useStore();
   const activeFile = useStore(getActiveFile);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [showSaveDropdown, setShowSaveDropdown] = useState(false);
@@ -17,7 +17,10 @@ export default function Header() {
       // Ctrl+S: Save
       if ((e.ctrlKey || e.metaKey) && e.key === 's') {
         e.preventDefault();
-        if (activeFile) handleDownload();
+        if (activeFile) {
+          handleDownload();
+          markFileSaved(activeFile.id);
+        }
         return;
       }
       // Alt+N: New file
@@ -36,7 +39,7 @@ export default function Header() {
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [activeFile]);
+  }, [activeFile, markFileSaved]);
 
   // 드롭다운 외부 클릭시 닫기
   useEffect(() => {
@@ -97,8 +100,9 @@ export default function Header() {
 
   const handleSaveAsMarkdown = useCallback(() => {
     handleDownload();
+    if (activeFile) markFileSaved(activeFile.id);
     setShowSaveDropdown(false);
-  }, [handleDownload]);
+  }, [handleDownload, activeFile, markFileSaved]);
 
   const handleSaveAsHTML = useCallback(async () => {
     if (!activeFile) return;
